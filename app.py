@@ -7,7 +7,7 @@ def index():
     return render_template_string('''
         <h1>Media Test Site (Origin Server)</h1>
         <h2>Images</h2>
-        <img src="/static/images/image1.jpg" width="400"><br>
+        <img src="/static/images/image1.png" width="400"><br>
         <img src="/static/images/image2.png" width="400"><br>
         <h2>Videos</h2>
         <video width="400" controls>
