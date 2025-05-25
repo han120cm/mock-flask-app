@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, url_for
+from flask import Flask, render_template, url_for
 
 app = Flask(__name__)
 
@@ -25,23 +25,9 @@ def make_urls(base_url, start, end):
 
 @app.route("/")
 def home():
-    return render_template_string("""
-    <h1>Media Archive</h1>
-
-    <h2>📸 Image Categories</h2>
-    <ul>
-    {% for name in image_groups %}
-        <li><a href="{{ url_for('show_images', group=name) }}">{{ name.title() }}</a></li>
-    {% endfor %}
-    </ul>
-
-    <h2>🎥 Video Categories</h2>
-    <ul>
-    {% for name in video_groups %}
-        <li><a href="{{ url_for('show_videos', group=name) }}">{{ name.replace('-', ' ').title() }}</a></li>
-    {% endfor %}
-    </ul>
-    """, image_groups=IMAGE_GROUPS, video_groups=VIDEO_GROUPS)
+    return render_template('home.html', 
+                         image_groups=IMAGE_GROUPS, 
+                         video_groups=VIDEO_GROUPS)
 
 @app.route("/images/<group>")
 def show_images(group):
@@ -49,13 +35,7 @@ def show_images(group):
         return "Invalid image group", 404
     start, end = IMAGE_GROUPS[group]
     urls = make_urls(IMAGE_BASE, start, end)
-    return render_template_string("""
-    <h1>Image Group: {{ group.title() }}</h1>
-    <a href="{{ url_for('home') }}">← Back to home</a><br><br>
-    {% for url in urls %}
-        <img src="{{ url }}" width="200" style="margin: 5px;">
-    {% endfor %}
-    """, group=group, urls=urls)
+    return render_template('images.html', group=group, urls=urls)
 
 @app.route("/videos/<group>")
 def show_videos(group):
@@ -63,16 +43,7 @@ def show_videos(group):
         return "Invalid video group", 404
     start, end = VIDEO_GROUPS[group]
     urls = make_urls(VIDEO_BASE, start, end)
-    return render_template_string("""
-    <h1>Video Group: {{ group.replace('-', ' ').title() }}</h1>
-    <a href="{{ url_for('home') }}">← Back to home</a><br><br>
-    {% for url in urls %}
-        <video width="320" height="240" controls style="margin: 8px;">
-            <source src="{{ url }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    {% endfor %}
-    """, group=group, urls=urls)
+    return render_template('videos.html', group=group, urls=urls)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8000)

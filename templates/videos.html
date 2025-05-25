@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}{{ group.replace('-', ' ').title() }} Videos - Media Archive{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>🎥 {{ group.replace('-', ' ').title() }} Videos</h1>
+        <p>Browsing {{ urls|length }} videos in the {{ group.replace('-', ' ') }} collection</p>
+    </div>
+    
+    <a href="{{ url_for('home') }}" class="back-button">← Back to Archive</a>
+    
+    <div class="media-grid">
+        {% for url in urls %}
+        <div class="media-item">
+            <video controls preload="metadata">
+                <source src="{{ url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="media-info">
+                <h4>Video {{ loop.index }}</h4>
+                <p>{{ group.replace('-', ' ').title() }} Collection</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
