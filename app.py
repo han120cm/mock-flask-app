@@ -5,7 +5,7 @@ import hashlib
 app = Flask(__name__)
 
 # CDN configuration based on user location
-CDN_ENDPOINT = "https://cdn-us-east.sohryuu.me"
+CDN_ENDPOINT = "https://cdn.sohryuu.me"
 
 # Group definitions
 IMAGE_GROUPS = {
