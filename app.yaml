@@ -1,0 +1,10 @@
+runtime: python311  # Use the appropriate Python runtime (e.g., python310, python311)
+
+entrypoint: gunicorn -b :$PORT app:app  # 'app' is the filename, and 'app' is the Flask object
+
+env_variables:
+  FLASK_ENV: production
+
+handlers:
+- url: /.*
+  script: auto
