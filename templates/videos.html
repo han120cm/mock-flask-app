@@ -7,6 +7,7 @@
     <div class="header">
         <h1>🎥 {{ group.replace('-', ' ').title() }} Videos</h1>
         <p>Browsing {{ urls|length }} videos in the {{ group.replace('-', ' ') }} collection</p>
+        <p>🌐 Served from: {{ CDN_FLAG }} {{ CDN_REGION }}</p>
     </div>
     
     <a href="{{ url_for('home') }}" class="back-button">← Back to Archive</a>
