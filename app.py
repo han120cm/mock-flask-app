@@ -63,26 +63,48 @@ def show_images(group):
     if group not in IMAGE_GROUPS:
         return "Invalid image group", 404
     
+    # Get CDN region from the header set by NGINX
+    cdn_region = request.headers.get('X-CDN-Region', 'Unknown')
+    
+    # Set flag based on region
+    if cdn_region == 'EU-West':
+        cdn_flag = '🇪🇺'
+    elif 'US' in cdn_region:
+        cdn_flag = '🇺🇸'
+    else:
+        cdn_flag = '🌐'
+        
     start, end = IMAGE_GROUPS[group]
     
     # Always use CDN - GeoDNS routes to nearest server
     IMAGE_BASE = "https://storage.googleapis.com/bucket-main-ta/static/images/image_{}.jpg"
     urls = make_urls(IMAGE_BASE, start, end)
     
-    response = make_response(render_template('images.html', group=group, urls=urls))
+    response = make_response(render_template('images.html', group=group, urls=urls, CDN_REGION=cdn_region, CDN_FLAG=cdn_flag))
     return add_cache_headers(response, 'page')
 
 @app.route("/videos/<group>")
 def show_videos(group):
     if group not in VIDEO_GROUPS:
         return "Invalid video group", 404
+    
+    # Get CDN region from the header set by NGINX
+    cdn_region = request.headers.get('X-CDN-Region', 'Unknown')
+    
+    # Set flag based on region
+    if cdn_region == 'EU-West':
+        cdn_flag = '🇪🇺'
+    elif 'US' in cdn_region:
+        cdn_flag = '🇺🇸'
+    else:
+        cdn_flag = '🌐'
         
     start, end = VIDEO_GROUPS[group]
     
     VIDEO_BASE = "https://storage.googleapis.com/bucket-main-ta/static/videos/video_{}.mp4"
     urls = make_urls(VIDEO_BASE, start, end)
-    
-    response = make_response(render_template('videos.html', group=group, urls=urls))
+
+    response = make_response(render_template('videos.html', group=group, urls=urls, CDN_REGION=cdn_region, CDN_FLAG=cdn_flag))
     return add_cache_headers(response, 'page')
 
 # Health check endpoint for CDN
