@@ -4,10 +4,10 @@ This is a testbed application for demonstrating CDN (Content Delivery Network) f
 
 ## Features
 
-- **CDN Region Detection**: Automatically detects and displays which CDN region is serving content
+- **CDN Region Detection**: Automatically detects and displays which CDN region is serving content (using GCore GeoDNS)
 - **Media Archive**: Browse images and videos organized by categories
-- **Real-time CDN Info**: Shows current CDN region with flag emoji and descriptive name
-- **Debug Tools**: Built-in debugging endpoints to verify CDN functionality
+- **Real-time CDN Info**: Shows current CDN region with flag emoji and descriptive name ( in progress )
+- **Debug Tools**: Built-in debugging endpoints to verify CDN functionality ( in progress ) 
 
 ## CDN Configuration
 
