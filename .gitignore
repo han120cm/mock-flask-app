@@ -1,1 +1,3 @@
 venv
+nginx.conf
+cdn.conf
