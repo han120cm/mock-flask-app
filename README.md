@@ -34,6 +34,43 @@ The app is designed to work with an nginx reverse proxy that sets custom headers
    - Home page: http://localhost:8000/
    - Test CDN: http://localhost:8000/test-cdn
    - Debug headers: http://localhost:8000/debug-headers
+  
+## Config Remote CDN
+```bash
+# Update 
+sudo apt update
+
+# Install nginx
+sudo apt install nginx
+
+# Check nginx status
+sudo systemctl status nginx
+
+# Set nginx configuration
+sudo nano /etc/nginx/nginx.conf
+
+# copy paste the nginx.conf from repo
+
+# Set server block configuration
+sudo nano /etc/nginx/conf.d/cdn.conf
+
+# Set SSL certificate using LetsEncrypt
+sudo apt install certbot python3-certbot-nginx -y
+sudo certbot --nginx -d cdn.sohryuu.me
+
+# Notes: for the root domain (e.g. sohryuu.me) use tutorial from the domain registrar
+
+# copy paste the cdn.conf from repo
+
+# Make cache directory
+sudo mkdir -p /var/cache/nginx
+sudo chown -R www-data:www-data /var/cache/nginx  # For Ubuntu/Debian
+
+# Test and reload
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
 
 ## Testing CDN Functionality
 
