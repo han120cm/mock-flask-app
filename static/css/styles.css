@@ -177,3 +177,75 @@ body {
         gap: 15px;
     }
 }
+
+/* CDN Test Page Styles */
+.info-card {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.cdn-info {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.headers-info {
+    display: grid;
+    gap: 10px;
+}
+
+.header-item {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.header-value {
+    color: #e74c3c;
+    font-family: monospace;
+    word-break: break-all;
+}
+
+.test-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.test-link {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.test-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    color: white;
+}
+
+.expectations {
+    list-style: none;
+    padding: 0;
+}
+
+.expectations li {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border-left: 4px solid #27ae60;
+    font-size: 0.95rem;
+}

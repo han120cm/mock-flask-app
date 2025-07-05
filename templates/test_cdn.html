@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}CDN Test Page{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>🌐 CDN Test Page</h1>
+        <p>This page helps you verify that your CDN is working correctly</p>
+    </div>
+
+    <div class="section">
+        <h2>🔍 Request Headers</h2>
+        <div class="headers-info">
+            {% for header_name, header_value in headers_info.items() %}
+            <div class="header-item">
+                <strong>{{ header_name }}:</strong> 
+                <span class="header-value">{{ header_value }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🧪 Test Links</h2>
+        <div class="test-links">
+            <a href="{{ url_for('home') }}" class="test-link">🏠 Home Page</a>
+            <a href="{{ url_for('show_images', group='trending') }}" class="test-link">📸 Trending Images</a>
+            <a href="{{ url_for('show_videos', group='short-clips') }}" class="test-link">🎥 Short Videos</a>
+            <a href="{{ url_for('debug_headers') }}" class="test-link">🔧 Debug Headers (JSON)</a>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📊 Expected Behavior</h2>
+        <ul class="expectations">
+            <li>✅ CDN Region should show "🇮🇩 Southeast Asia" for your SEA server</li>
+            <li>✅ X-CDN-Region header should be "sea"</li>
+            <li>✅ X-User-Region header should be "sea"</li>
+            <li>✅ X-Cache-Status should show cache status (HIT/MISS/EXPIRED)</li>
+            <li>✅ X-Served-From should show "GCS-via-CDN" for media files</li>
+        </ul>
+    </div>
+</div>
+{% endblock %} 
