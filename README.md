@@ -71,7 +71,7 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 ### Monitor Implementation 
-1. Install Prometheus with install-prometheus.sh
+1. Install Prometheus with install-prometheus.sh (for the central)
 2. Create /etc/prometheus/prometheus.yml
 3. Create systemd service for prometheus (prometheus.service) in /etc/systemd/system/prometheus.service
 4. Enable service :
@@ -138,7 +138,33 @@ curl http://localhost/nginx_status
 ```bash
 curl http://localhost:9113/metrics 
 ```
+16. Install Fluentd and Ruby
+```bash
+sudo apt install build-essential ruby-dev
+ruby --version
+gem install fluentd --no-dec
+gem install fluent-plugin-prometheus
+fluentd --version
+```
+17. Create regular expression from log sample (to check regex, you can use regex101.com)
+18. Fluentd set up
+```bash
+sudo mkdir /etc/fluent/
+sudo nano /etc/fluent/fluent.conf
 
+# use fluent.conf file
+
+sudo nano /etc/systemd/system/fluentd.service
+
+# use fluentd.service
+
+sudo systemctl enable fluentd
+sudo systemctl start fluentd
+
+curl http://localhost:24231/metrics
+
+# add prometheus target to scrap fluentd
+```
 ### Grafana Dashboard Set Up
 1. Install Grafana
 ```bash
