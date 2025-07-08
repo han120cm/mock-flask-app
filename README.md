@@ -142,8 +142,8 @@ curl http://localhost:9113/metrics
 ```bash
 sudo apt install build-essential ruby-dev
 ruby --version
-gem install fluentd --no-dec
-gem install fluent-plugin-prometheus
+sudo gem install fluentd --no-doc
+sudo gem install fluent-plugin-prometheus
 fluentd --version
 ```
 17. Create regular expression from log sample (to check regex, you can use regex101.com)
