@@ -11,6 +11,12 @@ body {
     color: #333;
 }
 
+hr {
+    border: 0;
+    height: 1px;
+    padding: 10px;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -248,4 +254,243 @@ body {
     border-radius: 8px;
     border-left: 4px solid #27ae60;
     font-size: 0.95rem;
+}
+
+.upload-outer {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(120deg, #e0e7ff 0%, #f8fafc 100%);
+  }
+  
+  /* Card container */
+  .upload-card-modern {
+    background: #fff;
+    border-radius: 2em;
+    box-shadow: 0 8px 32px rgba(79,140,255,0.13);
+    padding: 2.5em 2.5em 2em 2.5em;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    margin: 2em 0;
+  }
+  
+  /* Header section */
+  .upload-header {
+    margin-bottom: 1.5em;
+  }
+  .upload-icon {
+    font-size: 2.5em;
+    margin-bottom: 0.2em;
+  }
+  .upload-card-modern h2 {
+    color: #2563eb;
+    font-weight: 700;
+    margin-bottom: 0.2em;
+  }
+  .upload-desc {
+    color: #64748b;
+    font-size: 1.05em;
+    margin-bottom: 0.5em;
+  }
+  
+  /* Form and input styles */
+  .input-label-icon {
+    margin-right: 0.3em;
+  }
+  .upload-form-modern .form-group {
+    text-align: left;
+    margin-bottom: 1.3em;
+  }
+  .upload-input-modern, .form-control {
+    border-radius: 1em;
+    border: 1.5px solid #dbeafe;
+    padding: 0.8em 1em;
+    font-size: 1.08em;
+    background: #f8fafc;
+    transition: border 0.2s, box-shadow 0.2s;
+    width: 100%;
+    margin-top: 0.3em;
+  }
+  .upload-input-modern:focus, .form-control:focus {
+    border: 1.5px solid #2563eb;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(79,140,255,0.10);
+  }
+  
+  /* Upload button */
+  .modern-upload-btn {
+    width: 100%;
+    background: linear-gradient(90deg, #2563eb, #38e8ff);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.15em;
+    border: none;
+    border-radius: 2em;
+    padding: 0.8em 0;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    box-shadow: 0 2px 8px rgba(79,140,255,0.10);
+    transition: background 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .modern-upload-btn:hover {
+    background: linear-gradient(90deg, #38e8ff, #2563eb);
+    box-shadow: 0 4px 16px rgba(79,140,255,0.15);
+  }
+  
+  /* Cancel/back button */
+  .modern-cancel-btn {
+    display: block;
+    width: 100%;
+    background: #f1f5f9;
+    color: #2563eb;
+    font-weight: 600;
+    font-size: 1.05em;
+    border: none;
+    border-radius: 2em;
+    padding: 0.7em 0;
+    margin-top: 0.2em;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .modern-cancel-btn:hover {
+    background: #e0e7ff;
+    color: #1e40af;
+  }
+  
+  /* Alert styling for flash messages */
+  .alert {
+    border-radius: 1em;
+    padding: 0.7em 1em;
+    margin-bottom: 1em;
+    font-size: 1em;
+    text-align: left;
+  }
+  .alert-success {
+    background: #e0f7e9;
+    color: #15803d;
+  }
+  .alert-danger {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+
+/* --- Action Buttons (Upload, Edit, Delete, Back) --- */
+.action-btn, .back-button {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1.1em;
+    margin: 0 0.2em 0.2em 0;
+}
+
+.action-btn-upload {
+    background: linear-gradient(90deg, #38e8ff, #2563eb);
+    color: #fff !important;
+}
+.action-btn-upload:hover {
+    background: linear-gradient(90deg, #2563eb, #38e8ff);
+    color: #fff !important;
+    box-shadow: 0 4px 16px rgba(56,232,255,0.15);
+}
+
+.action-btn-edit {
+    background: linear-gradient(90deg, #ffcc33, #ffb347);
+    color: #222 !important;
+}
+.action-btn-edit:hover {
+    background: linear-gradient(90deg, #ffb347, #ffcc33);
+    color: #111 !important;
+    box-shadow: 0 4px 16px rgba(255,204,51,0.15);
+}
+
+.action-btn-delete {
+    background: linear-gradient(90deg, #ff5858, #ffb347);
+    color: #fff !important;
+}
+.action-btn-delete:hover {
+    background: linear-gradient(90deg, #ffb347, #ff5858);
+    color: #fff !important;
+    box-shadow: 0 4px 16px rgba(255,88,88,0.15);
+}
+
+.back-button {
+    background: #3498db;
+    color: #fff !important;
+}
+.back-button:hover {
+    background: #2980b9;
+    color: #fff !important;
+    box-shadow: 0 4px 16px rgba(52,152,219,0.15);
+}
+
+/* --- Edit Content Form Modern Card Style --- */
+.edit-outer {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(120deg, #e0e7ff 0%, #f8fafc 100%);
+}
+.edit-card {
+  background: #fff;
+  border-radius: 2em;
+  box-shadow: 0 8px 32px rgba(79,140,255,0.13);
+  padding: 2.5em 2.5em 2em 2.5em;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  margin: 2em 0;
+}
+.edit-header {
+  margin-bottom: 1.5em;
+}
+.edit-icon {
+  font-size: 2.5em;
+  margin-bottom: 0.2em;
+}
+.edit-card h2 {
+  color: #2563eb;
+  font-weight: 700;
+  margin-bottom: 0.2em;
+}
+.edit-desc {
+  color: #64748b;
+  font-size: 1.05em;
+  margin-bottom: 0.5em;
+}
+.edit-form-modern .form-group {
+  text-align: left;
+  margin-bottom: 1.3em;
+}
+.edit-input-modern, .form-control {
+  border-radius: 1em;
+  border: 1.5px solid #dbeafe;
+  padding: 0.8em 1em;
+  font-size: 1.08em;
+  background: #f8fafc;
+  transition: border 0.2s, box-shadow 0.2s;
+  width: 100%;
+  margin-top: 0.3em;
+}
+.edit-input-modern:focus, .form-control:focus {
+  border: 1.5px solid #2563eb;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(79,140,255,0.10);
+}
+.edit-preview-img {
+  max-width: 100%;
+  max-height: 260px;
+  border-radius: 1em;
+  margin-bottom: 1.2em;
+  box-shadow: 0 2px 8px rgba(79,140,255,0.10);
+  background: #f8fafc;
 }

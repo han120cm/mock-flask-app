@@ -11,6 +11,7 @@
     </div>
     
     <a href="{{ url_for('home') }}" class="back-button">← Back to Archive</a>
+    <a href="{{ url_for('upload_content') }}" class="action-btn action-btn-upload" style="margin-left: 1em;">⬆️ Upload Video</a>
     
     <div class="media-grid">
         {% for url in urls %}
@@ -26,5 +27,29 @@
         </div>
         {% endfor %}
     </div>
+    <hr>
+    <h3 style="color: #fff;">User Uploaded Videos</h3>
+    {% if user_videos and user_videos|length > 0 %}
+    <div class="media-grid">
+        {% for vid in user_videos %}
+        <div class="media-item">
+            <video controls preload="metadata">
+                <source src="{{ vid.url }}">
+                Your browser does not support the video tag.
+            </video>
+            <div class="media-info">
+                <h4>{{ vid.filename }}</h4>
+                <p>Uploaded: {{ vid.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                <form method="POST" action="{{ url_for('delete_content', content_id=vid.id) }}" style="display:inline;">
+                    <a href="{{ url_for('edit_content', content_id=vid.id) }}" class="action-btn action-btn-edit">✏️ Edit</a>
+                    <button type="submit" class="action-btn action-btn-delete" onclick="return confirm('Delete this video?');">🗑️ Delete</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="text-align:center; color:#888;">No user uploaded videos yet.</p>
+    {% endif %}
 </div>
 {% endblock %}
