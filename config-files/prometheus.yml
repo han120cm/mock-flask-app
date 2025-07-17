@@ -53,3 +53,15 @@ scrape_configs:
     metrics_path: /metrics
     scrape_interval: 10s
 
+  - job_name: 'nginx-sea'
+    static_configs:
+      - targets: ['34.101.140.128:9113']
+    metrics_path: /metrics
+    scrape_interval: 10s
+
+
+  - job_name: 'fluentd-sea'
+    static_configs:
+      - targets: ['34.101.140.128:24231']
+    metrics_path: /metrics
+    scrape_interval: 10s

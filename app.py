@@ -1,6 +1,9 @@
 from flask import Flask, render_template, url_for, request, make_response
 from datetime import datetime, timedelta
 import hashlib
+import threading
+import time
+import requests
 
 app = Flask(__name__)
 
@@ -22,10 +25,34 @@ VIDEO_GROUPS = {
     "archived": (60, 65),
 }
 
-def make_urls(base_url, start, end, region='default'):
-    """Generate URLs - always use CDN, let GeoDNS handle routing"""
-    # Always use the same CDN domain - GeoDNS will route to nearest server
-    cdn_url = base_url.replace('https://storage.googleapis.com/bucket-main-ta', CDN_ENDPOINT)
+CDN_HEALTHCHECK_URL = f"{CDN_ENDPOINT}/static/images/image_0.jpg"  # Use a small, always-present file
+CDN_HEALTHCHECK_INTERVAL = 30  # seconds
+CDN_AVAILABLE = True  # Global flag
+
+
+def cdn_healthcheck_loop():
+    global CDN_AVAILABLE
+    while True:
+        try:
+            resp = requests.head(CDN_HEALTHCHECK_URL, timeout=3)
+            CDN_AVAILABLE = resp.status_code == 200
+        except Exception:
+            CDN_AVAILABLE = False
+        time.sleep(CDN_HEALTHCHECK_INTERVAL)
+
+# Start healthcheck thread at startup
+def start_cdn_healthcheck():
+    t = threading.Thread(target=cdn_healthcheck_loop, daemon=True)
+    t.start()
+
+def make_urls(base_url, start, end, region='default', cdn_active=None):
+    """Generate URLs - use CDN if active, else fallback to original storage URL"""
+    if cdn_active is None:
+        cdn_active = CDN_AVAILABLE
+    if cdn_active:
+        cdn_url = base_url.replace('https://storage.googleapis.com/bucket-main-ta', CDN_ENDPOINT)
+    else:
+        cdn_url = base_url  # Use original storage URL
     return [cdn_url.format(i) for i in range(start, end + 1)]
 
 def add_cache_headers(response, cache_type='static'):
@@ -63,52 +90,38 @@ def show_images(group):
     if group not in IMAGE_GROUPS:
         return "Invalid image group", 404
     
-    # Get CDN region from the header set by NGINX
     cdn_region = request.headers.get('X-CDN-Region', 'Unknown')
-    
-    # Set flag based on region
     if 'EU' in cdn_region:
         cdn_flag = '🇪🇺'
-    elif cdn_region == 'Southeast-Asia':
+    elif 'Asia' in cdn_region:
         cdn_flag = '🇮🇩'
     elif 'US' in cdn_region:
         cdn_flag = '🇺🇸'
     else:
         cdn_flag = '🌐'
-        
     start, end = IMAGE_GROUPS[group]
-    
-    # Always use CDN - GeoDNS routes to nearest server
     IMAGE_BASE = "https://storage.googleapis.com/bucket-main-ta/static/images/image_{}.jpg"
     urls = make_urls(IMAGE_BASE, start, end)
-    
-    response = make_response(render_template('images.html', group=group, urls=urls, CDN_REGION=cdn_region, CDN_FLAG=cdn_flag))
+    response = make_response(render_template('images.html', group=group, urls=urls, CDN_REGION=cdn_region, CDN_FLAG=cdn_flag, CDN_ACTIVE=CDN_AVAILABLE))
     return add_cache_headers(response, 'page')
 
 @app.route("/videos/<group>")
 def show_videos(group):
     if group not in VIDEO_GROUPS:
         return "Invalid video group", 404
-    
-    # Get CDN region from the header set by NGINX
     cdn_region = request.headers.get('X-CDN-Region', 'Unknown')
-    
-    # Set flag based on region
     if 'EU' in cdn_region:
         cdn_flag = '🇪🇺'
-    elif cdn_region == 'Southeast-Asia':
+    elif 'Asia' in cdn_region:
         cdn_flag = '🇮🇩'
     elif 'US' in cdn_region:
         cdn_flag = '🇺🇸'
     else:
         cdn_flag = '🌐'
-        
     start, end = VIDEO_GROUPS[group]
-    
     VIDEO_BASE = "https://storage.googleapis.com/bucket-main-ta/static/videos/video_{}.mp4"
     urls = make_urls(VIDEO_BASE, start, end)
-
-    response = make_response(render_template('videos.html', group=group, urls=urls, CDN_REGION=cdn_region, CDN_FLAG=cdn_flag))
+    response = make_response(render_template('videos.html', group=group, urls=urls, CDN_REGION=cdn_region, CDN_FLAG=cdn_flag, CDN_ACTIVE=CDN_AVAILABLE))
     return add_cache_headers(response, 'page')
 
 # Health check endpoint for CDN
@@ -129,4 +142,5 @@ def server_error(error):
     return response
 
 if __name__ == "__main__":
+    start_cdn_healthcheck()
     app.run(debug=True, host="0.0.0.0", port=8000)
