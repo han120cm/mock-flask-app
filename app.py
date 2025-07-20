@@ -405,6 +405,18 @@ def server_error(error):
         logger.error(f"Error in 500 handler: {e}")
         return "Internal server error", 500
 
+@app.route("/test-cdn")
+def test_cdn_page():
+    try:
+        # Pass all headers to the template
+        headers_info = {key: value for key, value in request.headers}
+        response = make_response(render_template('test_cdn.html', headers_info=headers_info))
+        return add_cache_headers(response, 'page')
+    except Exception as e:
+        logger.error(f"Error in test_cdn_page route: {e}")
+        return "Internal server error", 500
+
+
 if __name__ == "__main__":
     try:
         with app.app_context():
