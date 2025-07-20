@@ -6,15 +6,37 @@ import threading
 import time
 import requests
 import os
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/feb/Documents/GitHub/mock-flask-app/gcs-key.json"
+
+# Set Google Cloud credentials path - use environment variable or default to local path
+gcs_key_path = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', '/Users/feb/Documents/GitHub/mock-flask-app/gcs-key.json')
+if os.path.exists(gcs_key_path):
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = gcs_key_path
+
 from werkzeug.utils import secure_filename
 from google.cloud import storage
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+
+# Configure database path for Cloud Run (use /tmp for writable storage)
+if os.environ.get('GAE_ENV', '').startswith('standard') or os.environ.get('K_SERVICE'):
+    # Running on Cloud Run or App Engine
+    db_path = '/tmp/site.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+else:
+    # Local development
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'supersecretkey'  # Needed for flash messages
-UPLOAD_FOLDER = os.path.join('static', 'uploads')
+
+# Configure upload folder for Cloud Run
+if os.environ.get('GAE_ENV', '').startswith('standard') or os.environ.get('K_SERVICE'):
+    # Running on Cloud Run or App Engine - use /tmp for writable storage
+    UPLOAD_FOLDER = '/tmp/uploads'
+else:
+    # Local development
+    UPLOAD_FOLDER = os.path.join('static', 'uploads')
+
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 db = SQLAlchemy(app)
