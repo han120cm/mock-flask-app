@@ -232,7 +232,7 @@ def show_images(group):
         cdn_region = request.headers.get('X-CDN-Region', 'Unknown')
         if 'EU' in cdn_region:
             cdn_flag = '🇪🇺'
-        elif 'Asia' in cdn_region:
+        elif 'Southeast-Asia' in cdn_region:
             cdn_flag = '🇮🇩'
         elif 'US' in cdn_region:
             cdn_flag = '🇺🇸'
