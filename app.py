@@ -6,14 +6,28 @@ import threading
 import time
 import requests
 import os
+import logging
 
-# Set Google Cloud credentials path - use environment variable or default to local path
-gcs_key_path = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', '/Users/feb/Documents/GitHub/mock-flask-app/gcs-key.json')
-if os.path.exists(gcs_key_path):
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = gcs_key_path
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Use Cloud Run's default service account (no credentials file needed)
+# The service account will be automatically authenticated
 
 from werkzeug.utils import secure_filename
-from google.cloud import storage
+
+# Import Google Cloud Storage with error handling
+try:
+    from google.cloud import storage
+    GCS_AVAILABLE = True
+    logger.info("Google Cloud Storage imported successfully")
+except ImportError as e:
+    logger.warning(f"Google Cloud Storage not available: {e}")
+    GCS_AVAILABLE = False
+except Exception as e:
+    logger.warning(f"Error importing Google Cloud Storage: {e}")
+    GCS_AVAILABLE = False
 
 app = Flask(__name__)
 
@@ -22,9 +36,11 @@ if os.environ.get('GAE_ENV', '').startswith('standard') or os.environ.get('K_SER
     # Running on Cloud Run or App Engine
     db_path = '/tmp/site.db'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+    logger.info(f"Using Cloud Run database path: {db_path}")
 else:
     # Local development
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+    logger.info("Using local development database path")
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'supersecretkey'  # Needed for flash messages
@@ -39,6 +55,8 @@ else:
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+logger.info(f"Using upload folder: {UPLOAD_FOLDER}")
+
 db = SQLAlchemy(app)
 
 class UserContent(db.Model):
@@ -81,47 +99,61 @@ def cdn_healthcheck_loop():
         try:
             resp = requests.head(CDN_HEALTHCHECK_URL, timeout=3)
             CDN_AVAILABLE = resp.status_code == 200
-        except Exception:
+            logger.info(f"CDN healthcheck: {CDN_AVAILABLE}")
+        except Exception as e:
             CDN_AVAILABLE = False
+            logger.warning(f"CDN healthcheck failed: {e}")
         time.sleep(CDN_HEALTHCHECK_INTERVAL)
 
 # Start healthcheck thread at startup
 def start_cdn_healthcheck():
-    t = threading.Thread(target=cdn_healthcheck_loop, daemon=True)
-    t.start()
+    try:
+        t = threading.Thread(target=cdn_healthcheck_loop, daemon=True)
+        t.start()
+        logger.info("CDN healthcheck thread started")
+    except Exception as e:
+        logger.error(f"Failed to start CDN healthcheck: {e}")
 
 def make_urls(base_url, start, end, region='default', cdn_active=None):
     """Generate URLs - use CDN if active, else fallback to original storage URL"""
-    if cdn_active is None:
-        cdn_active = CDN_AVAILABLE
-    if cdn_active:
-        cdn_url = base_url.replace('https://storage.googleapis.com/bucket-main-ta', CDN_ENDPOINT)
-    else:
-        cdn_url = base_url  # Use original storage URL
-    return [cdn_url.format(i) for i in range(start, end + 1)]
+    try:
+        if cdn_active is None:
+            cdn_active = CDN_AVAILABLE
+        if cdn_active:
+            cdn_url = base_url.replace('https://storage.googleapis.com/bucket-main-ta', CDN_ENDPOINT)
+        else:
+            cdn_url = base_url  # Use original storage URL
+        return [cdn_url.format(i) for i in range(start, end + 1)]
+    except Exception as e:
+        logger.error(f"Error generating URLs: {e}")
+        return []
 
 def add_cache_headers(response, cache_type='static'):
     """Enhanced cache headers with better control"""
-    if cache_type == 'static':
-        response.headers['Cache-Control'] = 'public, max-age=2592000, immutable'  # 30 days
-        response.headers['Expires'] = (datetime.utcnow() + timedelta(days=30)).strftime('%a, %d %b %Y %H:%M:%S GMT')
-    elif cache_type == 'media':
-        response.headers['Cache-Control'] = 'public, max-age=2592000'  # 30 days
-        response.headers['Expires'] = (datetime.utcnow() + timedelta(days=30)).strftime('%a, %d %b %Y %H:%M:%S GMT')
-    elif cache_type == 'page':
-        response.headers['Cache-Control'] = 'public, max-age=3600, stale-while-revalidate=300'  # 1 hour
-    elif cache_type == 'api':
-        response.headers['Cache-Control'] = 'public, max-age=300'  # 5 minutes
-    
-    # Enhanced ETag
-    content_hash = hashlib.md5(response.get_data()).hexdigest()[:16]
-    response.headers['ETag'] = f'W/"{content_hash}"'
-    
-    # Add security and optimization headers
-    response.headers['Vary'] = 'Accept-Encoding, X-User-Region, Accept'
-    response.headers['X-Content-Type-Options'] = 'nosniff'
-    
-    return response
+    try:
+        if cache_type == 'static':
+            response.headers['Cache-Control'] = 'public, max-age=2592000, immutable'  # 30 days
+            response.headers['Expires'] = (datetime.utcnow() + timedelta(days=30)).strftime('%a, %d %b %Y %H:%M:%S GMT')
+        elif cache_type == 'media':
+            response.headers['Cache-Control'] = 'public, max-age=2592000'  # 30 days
+            response.headers['Expires'] = (datetime.utcnow() + timedelta(days=30)).strftime('%a, %d %b %Y %H:%M:%S GMT')
+        elif cache_type == 'page':
+            response.headers['Cache-Control'] = 'public, max-age=3600, stale-while-revalidate=300'  # 1 hour
+        elif cache_type == 'api':
+            response.headers['Cache-Control'] = 'public, max-age=300'  # 5 minutes
+        
+        # Enhanced ETag
+        content_hash = hashlib.md5(response.get_data()).hexdigest()[:16]
+        response.headers['ETag'] = f'W/"{content_hash}"'
+        
+        # Add security and optimization headers
+        response.headers['Vary'] = 'Accept-Encoding, X-User-Region, Accept'
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        
+        return response
+    except Exception as e:
+        logger.error(f"Error adding cache headers: {e}")
+        return response
 
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'avi'}
 
@@ -129,12 +161,19 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def upload_file_to_gcs(file_stream, filename, content_type, bucket_name):
-    client = storage.Client()
-    bucket = client.bucket(bucket_name)
-    blob = bucket.blob(f'static/uploads/{filename}')
-    blob.upload_from_file(file_stream, content_type=content_type)
-    # Do NOT call blob.make_public() if uniform bucket-level access is enabled
-    return f'https://storage.googleapis.com/{bucket_name}/static/uploads/{filename}'
+    if not GCS_AVAILABLE:
+        logger.error("Google Cloud Storage is not available. Cannot upload file.")
+        raise Exception("Google Cloud Storage is not available.")
+    try:
+        client = storage.Client()
+        bucket = client.bucket(bucket_name)
+        blob = bucket.blob(f'static/uploads/{filename}')
+        blob.upload_from_file(file_stream, content_type=content_type)
+        # Do NOT call blob.make_public() if uniform bucket-level access is enabled
+        return f'https://storage.googleapis.com/{bucket_name}/static/uploads/{filename}'
+    except Exception as e:
+        logger.error(f"Error uploading file to GCS: {e}")
+        raise
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_content():
@@ -157,7 +196,7 @@ def upload_content():
         filename = secure_filename(str(file.filename))
         # Upload to GCS
         public_url = f"https://storage.googleapis.com/bucket-main-ta/static/uploads/{filename}"
-        new_content = UserContent(filename=filename, url=public_url, content_type=content_type, group=group)
+        new_content = UserContent(filename=filename, url=public_url, content_type=content_type, group=group)  # type: ignore
         db.session.add(new_content)
         db.session.commit()
         flash('Upload successful!', 'success')
@@ -170,50 +209,94 @@ def upload_content():
 
 @app.route("/")
 def home():
-    response = make_response(render_template('home.html', 
-                                           image_groups=IMAGE_GROUPS, 
-                                           video_groups=VIDEO_GROUPS))
-    return add_cache_headers(response, 'page')
+    try:
+        response = make_response(render_template('home.html', 
+                                               image_groups=IMAGE_GROUPS, 
+                                               video_groups=VIDEO_GROUPS))
+        return add_cache_headers(response, 'page')
+    except Exception as e:
+        logger.error(f"Error in home route: {e}")
+        return "Internal server error", 500
 
 @app.route("/images/<group>")
 def show_images(group):
-    if group not in IMAGE_GROUPS:
-        return "Invalid image group", 404
-    cdn_region = request.headers.get('X-CDN-Region', 'Unknown')
-    if 'EU' in cdn_region:
-        cdn_flag = '🇪🇺'
-    elif 'Asia' in cdn_region:
-        cdn_flag = '🇮🇩'
-    elif 'US' in cdn_region:
-        cdn_flag = '🇺🇸'
-    else:
-        cdn_flag = '🌐'
-    start, end = IMAGE_GROUPS[group]
-    IMAGE_BASE = "https://storage.googleapis.com/bucket-main-ta/static/images/image_{}.jpg"
-    urls = make_urls(IMAGE_BASE, start, end)
-    user_images = UserContent.query.filter_by(content_type='image', group=group).order_by(UserContent.uploaded_at.desc()).all()
-    response = make_response(render_template('images.html', group=group, urls=urls, CDN_REGION=cdn_region, CDN_FLAG=cdn_flag, CDN_ACTIVE=CDN_AVAILABLE, user_images=user_images))
-    return add_cache_headers(response, 'page')
+    try:
+        if group not in IMAGE_GROUPS:
+            logger.warning(f"Invalid image group requested: {group}")
+            return "Invalid image group", 404
+        
+        cdn_region = request.headers.get('X-CDN-Region', 'Unknown')
+        if 'EU' in cdn_region:
+            cdn_flag = '🇪🇺'
+        elif 'Asia' in cdn_region:
+            cdn_flag = '🇮🇩'
+        elif 'US' in cdn_region:
+            cdn_flag = '🇺🇸'
+        else:
+            cdn_flag = '🌐'
+        
+        start, end = IMAGE_GROUPS[group]
+        IMAGE_BASE = "https://storage.googleapis.com/bucket-main-ta/static/images/image_{}.jpg"
+        urls = make_urls(IMAGE_BASE, start, end)
+        
+        # Safely query the database
+        try:
+            user_images = UserContent.query.filter_by(content_type='image', group=group).order_by(UserContent.uploaded_at.desc()).all()
+        except Exception as e:
+            logger.error(f"Database error in show_images: {e}")
+            user_images = []
+        
+        response = make_response(render_template('images.html', 
+                                               group=group, 
+                                               urls=urls, 
+                                               CDN_REGION=cdn_region, 
+                                               CDN_FLAG=cdn_flag, 
+                                               CDN_ACTIVE=CDN_AVAILABLE, 
+                                               user_images=user_images))
+        return add_cache_headers(response, 'page')
+    except Exception as e:
+        logger.error(f"Error in show_images route: {e}")
+        return "Internal server error", 500
 
 @app.route("/videos/<group>")
 def show_videos(group):
-    if group not in VIDEO_GROUPS:
-        return "Invalid video group", 404
-    cdn_region = request.headers.get('X-CDN-Region', 'Unknown')
-    if 'EU' in cdn_region:
-        cdn_flag = '🇪🇺'
-    elif 'Asia' in cdn_region:
-        cdn_flag = '🇮🇩'
-    elif 'US' in cdn_region:
-        cdn_flag = '🇺🇸'
-    else:
-        cdn_flag = '🌐'
-    start, end = VIDEO_GROUPS[group]
-    VIDEO_BASE = "https://storage.googleapis.com/bucket-main-ta/static/videos/video_{}.mp4"
-    urls = make_urls(VIDEO_BASE, start, end)
-    user_videos = UserContent.query.filter_by(content_type='video', group=group).order_by(UserContent.uploaded_at.desc()).all()
-    response = make_response(render_template('videos.html', group=group, urls=urls, CDN_REGION=cdn_region, CDN_FLAG=cdn_flag, CDN_ACTIVE=CDN_AVAILABLE, user_videos=user_videos))
-    return add_cache_headers(response, 'page')
+    try:
+        if group not in VIDEO_GROUPS:
+            logger.warning(f"Invalid video group requested: {group}")
+            return "Invalid video group", 404
+        
+        cdn_region = request.headers.get('X-CDN-Region', 'Unknown')
+        if 'EU' in cdn_region:
+            cdn_flag = '🇪🇺'
+        elif 'Asia' in cdn_region:
+            cdn_flag = '🇮🇩'
+        elif 'US' in cdn_region:
+            cdn_flag = '🇺🇸'
+        else:
+            cdn_flag = '🌐'
+        
+        start, end = VIDEO_GROUPS[group]
+        VIDEO_BASE = "https://storage.googleapis.com/bucket-main-ta/static/videos/video_{}.mp4"
+        urls = make_urls(VIDEO_BASE, start, end)
+        
+        # Safely query the database
+        try:
+            user_videos = UserContent.query.filter_by(content_type='video', group=group).order_by(UserContent.uploaded_at.desc()).all()
+        except Exception as e:
+            logger.error(f"Database error in show_videos: {e}")
+            user_videos = []
+        
+        response = make_response(render_template('videos.html', 
+                                               group=group, 
+                                               urls=urls, 
+                                               CDN_REGION=cdn_region, 
+                                               CDN_FLAG=cdn_flag, 
+                                               CDN_ACTIVE=CDN_AVAILABLE, 
+                                               user_videos=user_videos))
+        return add_cache_headers(response, 'page')
+    except Exception as e:
+        logger.error(f"Error in show_videos route: {e}")
+        return "Internal server error", 500
 
 @app.route('/edit/<int:content_id>', methods=['GET', 'POST'])
 def edit_content(content_id):
@@ -273,22 +356,58 @@ def delete_content(content_id):
 # Health check endpoint for CDN
 @app.route("/health")
 def health_check():
-    return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
+    try:
+        return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
+    except Exception as e:
+        logger.error(f"Error in health check: {e}")
+        return {"status": "unhealthy", "error": str(e)}, 500
+
+# Debug endpoint to help identify issues
+@app.route("/debug")
+def debug_info():
+    try:
+        debug_info = {
+            "database_path": app.config['SQLALCHEMY_DATABASE_URI'],
+            "upload_folder": app.config['UPLOAD_FOLDER'],
+            "gcs_available": GCS_AVAILABLE,
+            "cdn_available": CDN_AVAILABLE,
+            "image_groups": list(IMAGE_GROUPS.keys()),
+            "video_groups": list(VIDEO_GROUPS.keys()),
+            "environment": "Cloud Run" if os.environ.get('K_SERVICE') else "Local",
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        return debug_info
+    except Exception as e:
+        logger.error(f"Error in debug route: {e}")
+        return {"error": str(e)}, 500
 
 # Error handlers
 @app.errorhandler(404)
 def not_found(error):
-    response = make_response(render_template('404.html'), 404)
-    return add_cache_headers(response, 'page')
+    try:
+        response = make_response(render_template('404.html'), 404)
+        return add_cache_headers(response, 'page')
+    except Exception as e:
+        logger.error(f"Error in 404 handler: {e}")
+        return "Page not found", 404
 
 @app.errorhandler(500)
 def server_error(error):
-    response = make_response(render_template('500.html'), 500)
-    response.headers['Cache-Control'] = 'no-cache'
-    return response
+    try:
+        response = make_response(render_template('500.html'), 500)
+        response.headers['Cache-Control'] = 'no-cache'
+        return response
+    except Exception as e:
+        logger.error(f"Error in 500 handler: {e}")
+        return "Internal server error", 500
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-    start_cdn_healthcheck()
-    app.run(debug=True, host="0.0.0.0", port=8080)
+    try:
+        with app.app_context():
+            db.create_all()
+            logger.info("Database tables created successfully")
+        start_cdn_healthcheck()
+        app.run(debug=True, host="0.0.0.0", port=8080)
+    except Exception as e:
+        logger.error(f"Failed to start application: {e}")
+        raise
