@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, make_response, redirect, flash
+from flask import Flask, render_template, url_for, request, make_response, redirect, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 import hashlib
@@ -404,6 +404,11 @@ def server_error(error):
     except Exception as e:
         logger.error(f"Error in 500 handler: {e}")
         return "Internal server error", 500
+
+@app.route("/debug-headers")
+def debug_headers():
+    headers_info = {key: value for key, value in request.headers}
+    return jsonify(headers_info)
 
 @app.route("/test-cdn")
 def test_cdn_page():
