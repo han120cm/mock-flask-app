@@ -59,10 +59,6 @@ logger.info(f"Using upload folder: {UPLOAD_FOLDER}")
 
 db = SQLAlchemy(app)
 
-# ADD THIS RIGHT HERE:
-with app.app_context():
-    db.create_all()
-
 class UserContent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(120), nullable=False)
@@ -73,6 +69,9 @@ class UserContent(db.Model):
 
     def __repr__(self):
         return f'<UserContent {self.filename}>'
+
+with app.app_context():
+    db.create_all()
 
 # CDN configuration based on user location
 CDN_ENDPOINT = "https://cdn.sohryuu.me"
@@ -269,7 +268,7 @@ def show_videos(group):
             logger.warning(f"Invalid video group requested: {group}")
             return "Invalid video group", 404
         
-        cdn_region = request.headers.get('X-CDN-Region', 'Unknown')
+        cdn_region = request.headers.get('X-CDN-Region', 'Origin')
         if 'EU' in cdn_region:
             cdn_flag = '🇪🇺'
         elif 'Asia' in cdn_region:
