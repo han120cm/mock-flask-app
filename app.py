@@ -59,6 +59,10 @@ logger.info(f"Using upload folder: {UPLOAD_FOLDER}")
 
 db = SQLAlchemy(app)
 
+# ADD THIS RIGHT HERE:
+with app.app_context():
+    db.create_all()
+
 class UserContent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(120), nullable=False)
