@@ -363,7 +363,6 @@ def edit_content(content_id):
             # Only update filename in GCS if changed (rename not supported, so re-upload is needed for true rename)
             if new_filename != content.filename:
                 flash('To change filename, please re-upload the file with the new name.', 'warning')
-                return redirect(request.url)
         content.group = group
         db.session.commit()
         flash('Content updated!', 'success')
