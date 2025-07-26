@@ -11,3 +11,6 @@ gunicorn
 flask_sqlalchemy
 google-cloud-storage
 requests
+psycopg2-binary
+cloud-sql-python-connector[pg8000]
+python-dotenv

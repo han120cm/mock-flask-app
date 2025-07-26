@@ -7,6 +7,10 @@ import time
 import requests
 import os
 import logging
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -31,33 +35,56 @@ except Exception as e:
 
 app = Flask(__name__)
 
-# Configure database path for Cloud Run (use /tmp for writable storage)
-if os.environ.get('GAE_ENV', '').startswith('standard') or os.environ.get('K_SERVICE'):
-    # Running on Cloud Run or App Engine
-    db_path = '/tmp/site.db'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
-    logger.info(f"Using Cloud Run database path: {db_path}")
-else:
-    # Local development
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-    logger.info("Using local development database path")
+# [START cloud_sql_python_connector_postgres_pg8000]
+# The following code is modified from the Google Cloud SQL Python Connector documentation
+# and is licensed under the Apache 2.0 License.
+# See: https://github.com/GoogleCloudPlatform/cloud-sql-python-connector
+import pg8000
+from google.cloud.sql.connector import Connector, IPTypes
+
+from sqlalchemy.orm import DeclarativeBase
+
+class Base(DeclarativeBase):
+    pass
+
+db = SQLAlchemy(model_class=Base)
+
+# Initialize the Cloud SQL Python Connector
+connector = Connector()
+
+# Function to get the database connection
+def getconn() -> "pg8000.dbapi.Connection":
+    # Retrieve environment variables
+    cloud_sql_connection_name = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
+    db_user = os.environ.get("DB_USER")
+    db_pass = os.environ.get("DB_PASS")
+    db_name = os.environ.get("DB_NAME")
+
+    # Ensure all required environment variables are set
+    if not all([cloud_sql_connection_name, db_user, db_pass, db_name]):
+        raise ValueError("Missing required database environment variables.")
+
+    conn: pg8000.dbapi.Connection = connector.connect(
+        cloud_sql_connection_name, 
+        "pg8000",
+        user=db_user,
+        password=db_pass,          
+        db=db_name,                 
+        ip_type=IPTypes.PUBLIC,                   # Use public IP for Cloud Run
+    )
+    return conn
+
+# Configure the SQLAlchemy engine using the connection pool
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+pg8000://"
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    "creator": getconn,
+}
+
+db.init_app(app)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'supersecretkey'  # Needed for flash messages
-
-# Configure upload folder for Cloud Run
-if os.environ.get('GAE_ENV', '').startswith('standard') or os.environ.get('K_SERVICE'):
-    # Running on Cloud Run or App Engine - use /tmp for writable storage
-    UPLOAD_FOLDER = '/tmp/uploads'
-else:
-    # Local development
-    UPLOAD_FOLDER = os.path.join('static', 'uploads')
-
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-logger.info(f"Using upload folder: {UPLOAD_FOLDER}")
-
-db = SQLAlchemy(app)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['GCS_BUCKET_NAME'] = "bucket-main-ta"
 
 class UserContent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -158,6 +185,12 @@ def add_cache_headers(response, cache_type='static'):
         logger.error(f"Error adding cache headers: {e}")
         return response
 
+def replace_with_cdn(gcs_url):
+    """Replaces a GCS URL with a CDN URL if the CDN is available."""
+    if CDN_AVAILABLE:
+        return gcs_url.replace('https://storage.googleapis.com/bucket-main-ta', CDN_ENDPOINT)
+    return gcs_url
+
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'avi'}
 
 def allowed_file(filename):
@@ -198,8 +231,9 @@ def upload_content():
             return redirect(request.url)
         filename = secure_filename(str(file.filename))
         # Upload to GCS
-        public_url = f"https://storage.googleapis.com/bucket-main-ta/static/uploads/{filename}"
-        new_content = UserContent(filename=filename, url=public_url, content_type=content_type, group=group)  # type: ignore
+        gcs_url = f"https://storage.googleapis.com/bucket-main-ta/static/uploads/{filename}"
+        cdn_url = replace_with_cdn(gcs_url)
+        new_content = UserContent(filename=filename, url=cdn_url, content_type=content_type, group=group)  # type: ignore
         db.session.add(new_content)
         db.session.commit()
         flash('Upload successful!', 'success')
@@ -321,9 +355,10 @@ def edit_content(content_id):
                 flash('File type not allowed!', 'danger')
                 return redirect(request.url)
             # Upload new file to GCS
-            public_url = upload_file_to_gcs(file.stream, new_filename, file.content_type, 'bucket-main-ta')
+            gcs_url = upload_file_to_gcs(file.stream, new_filename, file.content_type, 'bucket-main-ta')
+            cdn_url = replace_with_cdn(gcs_url)
             content.filename = new_filename
-            content.url = public_url
+            content.url = cdn_url
         else:
             # Only update filename in GCS if changed (rename not supported, so re-upload is needed for true rename)
             if new_filename != content.filename:
@@ -343,11 +378,19 @@ def delete_content(content_id):
     content = UserContent.query.get_or_404(content_id)
     group = content.group
     content_type = content.content_type
-    # Remove file from disk
-    try:
-        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], content.filename))
-    except Exception:
-        pass
+    
+    # Correctly delete the file from Google Cloud Storage
+    if GCS_AVAILABLE:
+        try:
+            client = storage.Client()
+            bucket = client.bucket(app.config["GCS_BUCKET_NAME"])  # Use config variable
+            blob = bucket.blob(f'static/uploads/{content.filename}')
+            blob.delete()
+            flash(f'File {content.filename} deleted from GCS.', 'info')
+        except Exception as e:
+            logger.error(f"Failed to delete {content.filename} from GCS: {e}")
+            flash('Error deleting file from cloud storage.', 'danger')
+
     db.session.delete(content)
     db.session.commit()
     flash('Content deleted!', 'success')
