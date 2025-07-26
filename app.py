@@ -349,20 +349,21 @@ def edit_content(content_id):
             flash('Filename is required!', 'danger')
             return redirect(request.url)
         new_filename = secure_filename(str(new_filename))
+
+        # Update filename if it has changed
+        if new_filename != content.filename:
+            content.filename = new_filename
+
         # Handle file replacement
         if file and file.filename:
             if not allowed_file(file.filename):
                 flash('File type not allowed!', 'danger')
                 return redirect(request.url)
             # Upload new file to GCS
-            gcs_url = upload_file_to_gcs(file.stream, new_filename, file.content_type, 'bucket-main-ta')
+            gcs_url = upload_file_to_gcs(file.stream, new_filename, file.content_type, app.config['GCS_BUCKET_NAME'])
             cdn_url = replace_with_cdn(gcs_url)
-            content.filename = new_filename
             content.url = cdn_url
-        else:
-            # Only update filename in GCS if changed (rename not supported, so re-upload is needed for true rename)
-            if new_filename != content.filename:
-                flash('To change filename, please re-upload the file with the new name.', 'warning')
+
         content.group = group
         db.session.commit()
         flash('Content updated!', 'success')
