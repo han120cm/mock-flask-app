@@ -31,7 +31,6 @@ scrape_configs:
       - targets: ['localhost:80']
     metrics_path: /nginx_status
     scrape_interval: 10s
-    # Note: This requires nginx status module to be enabled
 
   # CDN-specific metrics
   - job_name: 'cdn-metrics'
@@ -39,7 +38,6 @@ scrape_configs:
       - targets: ['localhost:8000']
     metrics_path: /metrics
     scrape_interval: 30s
-    # Note: This will be implemented in Phase 2 with custom Flask metrics
 
   - job_name: 'nginxlog'
     static_configs:
@@ -59,9 +57,28 @@ scrape_configs:
     metrics_path: /metrics
     scrape_interval: 10s
 
-
   - job_name: 'fluentd-sea'
     static_configs:
       - targets: ['34.101.140.128:24231']
     metrics_path: /metrics
     scrape_interval: 10s
+
+  - job_name: 'node-sea'
+    static_configs:
+      - targets: ['34.101.140.128:9100']
+
+  - job_name: 'nginx-us'
+    static_configs:
+      - targets: ['34.23.29.132:9113']
+    metrics_path: /metrics
+    scrape_interval: 10s
+
+  - job_name: 'fluentd-us'
+    static_configs:
+      - targets: ['34.23.29.132:24231']
+    metrics_path: /metrics
+    scrape_interval: 10s
+
+  - job_name: 'node-us'
+    static_configs:
+      - targets: ['34.23.29.132:9100']

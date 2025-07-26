@@ -1,10 +1,22 @@
-runtime: python311  # Use the appropriate Python runtime (e.g., python310, python311)
+runtime: python311
 
-entrypoint: gunicorn -b :$PORT app:app  # 'app' is the filename, and 'app' is the Flask object
+entrypoint: gunicorn -b :$PORT app:app
 
 env_variables:
   FLASK_ENV: production
+  PORT: 8080
 
 handlers:
 - url: /.*
   script: auto
+
+# Cloud Run specific settings
+automatic_scaling:
+  min_instances: 0
+  max_instances: 10
+  target_cpu_utilization: 0.6
+
+resources:
+  cpu: 1
+  memory_gb: 0.5
+  disk_size_gb: 10
