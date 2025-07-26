@@ -363,6 +363,9 @@ def edit_content(content_id):
             gcs_url = upload_file_to_gcs(file.stream, new_filename, file.content_type, app.config['GCS_BUCKET_NAME'])
             cdn_url = replace_with_cdn(gcs_url)
             content.url = cdn_url
+        
+        # Add a cache-busting parameter to the URL to force CDN/browser refresh
+        content.url = f"{content.url}?v={int(time.time())}"
 
         content.group = group
         db.session.commit()
