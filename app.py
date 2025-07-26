@@ -168,7 +168,7 @@ def add_cache_headers(response, cache_type='static'):
             response.headers['Cache-Control'] = 'public, max-age=2592000'  # 30 days
             response.headers['Expires'] = (datetime.utcnow() + timedelta(days=30)).strftime('%a, %d %b %Y %H:%M:%S GMT')
         elif cache_type == 'page':
-            response.headers['Cache-Control'] = 'public, max-age=3600, stale-while-revalidate=300'  # 1 hour
+            response.headers['Cache-Control'] = 'public, max-age=3060, stale-while-revalidate=10'
         elif cache_type == 'api':
             response.headers['Cache-Control'] = 'public, max-age=300'  # 5 minutes
         
@@ -231,7 +231,7 @@ def upload_content():
             return redirect(request.url)
         filename = secure_filename(str(file.filename))
         # Upload to GCS
-        gcs_url = f"https://storage.googleapis.com/bucket-main-ta/static/uploads/{filename}"
+        gcs_url = upload_file_to_gcs(file.stream, filename, file.content_type, app.config['GCS_BUCKET_NAME'])
         cdn_url = replace_with_cdn(gcs_url)
         new_content = UserContent(filename=filename, url=cdn_url, content_type=content_type, group=group)  # type: ignore
         db.session.add(new_content)
