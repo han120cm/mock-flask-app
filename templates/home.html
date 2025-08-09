@@ -10,6 +10,24 @@
     </div>
 
     <div class="section">
+        <h2>📊 Monitoring & Analytics</h2>
+        <div class="category-grid">
+            <a href="{{ url_for('dashboard_page') }}" class="category-card" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                <h3>📈 Performance Dashboard</h3>
+                <p>View CDN performance metrics</p>
+            </a>
+            <a href="{{ url_for('test_cdn_page') }}" class="category-card" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                <h3>🧪 CDN Test</h3>
+                <p>Verify CDN functionality</p>
+            </a>
+            <a href="{{ url_for('debug_headers') }}" class="category-card" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                <h3>🔧 Debug Headers</h3>
+                <p>Inspect request headers</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="section">
         <h2>📸 Image Categories</h2>
         <div class="category-grid">
             {% for name, (start, end) in image_groups.items() %}

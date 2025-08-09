@@ -16,7 +16,7 @@
     <div class="media-grid">
         {% for url in urls %}
         <div class="media-item">
-            <img src="{{ url }}" alt="Image {{ loop.index }}" loading="lazy">
+            <img src="{{ url }}" alt="Image {{ loop.index }}" loading="lazy" data-cache-status="unknown">
             <div class="media-info">
                 <h4>Image {{ loop.index }}</h4>
                 <p>{{ group.title() }} Collection</p>

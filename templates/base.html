@@ -8,5 +8,59 @@
 </head>
 <body>
     {% block content %}{% endblock %}
+    
+    <script>
+        // Client-side performance monitoring
+        document.addEventListener('DOMContentLoaded', function() {
+            // Measure page load performance
+            if (performance && performance.getEntriesByType) {
+                // Send performance metrics to our API
+                setTimeout(function() {
+                    const perfData = performance.getEntriesByType('navigation')[0];
+                    if (perfData) {
+                        const metrics = {
+                            latency: Math.round(perfData.loadEventEnd - perfData.fetchStart),
+                            region: document.querySelector('meta[name="cdn-region"]')?.content || 'local-dev',
+                            cache_status: document.querySelector('meta[name="cache-status"]')?.content || 'unknown',
+                            content_type: 'page'
+                        };
+                        
+                        // Send metrics to our collection endpoint
+                        fetch('/api/collect-metrics', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(metrics)
+                        }).catch(function(error) {
+                            console.log('Could not send metrics:', error);
+                        });
+                    }
+                }, 1000);
+            }
+        });
+        
+        // Measure image loading performance
+        document.addEventListener('load', function(e) {
+            if (e.target.tagName === 'IMG') {
+                const metrics = {
+                    latency: Math.round(performance.now()),
+                    region: document.querySelector('meta[name="cdn-region"]')?.content || 'local-dev',
+                    cache_status: e.target.getAttribute('data-cache-status') || 'unknown',
+                    content_type: 'image'
+                };
+                
+                fetch('/api/collect-metrics', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(metrics)
+                }).catch(function(error) {
+                    console.log('Could not send image metrics:', error);
+                });
+            }
+        }, true);
+    </script>
 </body>
 </html>

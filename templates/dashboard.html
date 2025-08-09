@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}CDN Performance Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>📈 CDN Performance Dashboard</h1>
+        <p>Real-time analytics and performance metrics for your CDN</p>
+        <button id="generate-test-data" style="background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">Generate Test Data</button>
+    </div>
+    
+    <a href="{{ url_for('home') }}" class="back-button">← Back to Archive</a>
+    
+    <div class="section">
+        <h2>📊 Global Performance Overview</h2>
+        <div class="category-grid">
+            <div class="category-card" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                <h3>Average Latency</h3>
+                <p id="avg-latency">Loading...</p>
+            </div>
+            <div class="category-card" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                <h3>Cache Hit Ratio</h3>
+                <p id="cache-ratio">Loading...</p>
+            </div>
+            <div class="category-card" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                <h3>Active Regions</h3>
+                <p id="active-regions">Loading...</p>
+            </div>
+            <div class="category-card" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+                <h3>Total Requests</h3>
+                <p id="total-requests">Loading...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>🌍 Regional Performance</h2>
+        <div id="region-performance">
+            <p>Loading regional data...</p>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>⏱️ Latency History (Last 24 Hours)</h2>
+        <div id="latency-chart-container">
+            <canvas id="latency-chart" width="400" height="200"></canvas>
+            <p id="chart-info" style="text-align: center; color: #666; margin-top: 10px;"></p>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>🛠️ CDN Health Status</h2>
+        <div id="health-status">
+            <p>Checking CDN health...</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script>
+    // Initialize chart
+    let latencyChart = null;
+    
+    // Add event listener for test data generation
+    document.getElementById('generate-test-data').addEventListener('click', async function() {
+        try {
+            const response = await fetch('/api/generate-test-data', {
+                method: 'POST'
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                alert('Test data generated successfully! Refreshing dashboard...');
+                updateDashboard();
+            } else {
+                alert('Error generating test data: ' + data.error);
+            }
+        } catch (error) {
+            alert('Error generating test data: ' + error.message);
+        }
+    });
+    
+    // Function to fetch and update dashboard data
+    async function updateDashboard() {
+        try {
+            const response = await fetch('/api/dashboard');
+            const data = await response.json();
+            
+            // Debug: log the received data
+            console.log('Dashboard data:', data);
+            
+            // Update summary metrics with error handling
+            document.getElementById('avg-latency').textContent = (data.average_latency && data.average_latency > 0) ? data.average_latency + ' ms' : 'No data';
+            document.getElementById('cache-ratio').textContent = (data.cache_hit_ratio && data.cache_hit_ratio > 0) ? data.cache_hit_ratio + '%' : '0%';
+            document.getElementById('active-regions').textContent = data.active_regions || 0;
+            document.getElementById('total-requests').textContent = (data.total_requests || 0).toLocaleString();
+            
+            // Update regional performance
+            if (data.regional_performance && Object.keys(data.regional_performance).length > 0) {
+                let regionHtml = '<div class="category-grid">';
+                for (const [region, metrics] of Object.entries(data.regional_performance)) {
+                    regionHtml += `
+                    <div class="category-card">
+                        <h3>${region}</h3>
+                        <p>Latency: ${(metrics.latency || 0)} ms</p>
+                        <p>Requests: ${(metrics.requests || 0).toLocaleString()}</p>
+                        <p>Cache Hit: ${(metrics.cache_hit_ratio || 0)}%</p>
+                    </div>
+                    `;
+                }
+                regionHtml += '</div>';
+                document.getElementById('region-performance').innerHTML = regionHtml;
+            } else {
+                document.getElementById('region-performance').innerHTML = '<p>No regional data available yet. Visit other pages to generate metrics.</p>';
+            }
+            
+            // Update health status
+            if (data.health_status && Object.keys(data.health_status).length > 0) {
+                let healthHtml = '<div class="category-grid">';
+                for (const [region, status] of Object.entries(data.health_status)) {
+                    const statusColor = status === 'healthy' ? '#27ae60' : '#e74c3c';
+                    healthHtml += `
+                    <div class="category-card" style="background: linear-gradient(135deg, ${statusColor}, ${statusColor}dd);">
+                        <h3>${region}</h3>
+                        <p>Status: ${status}</p>
+                    </div>
+                    `;
+                }
+                healthHtml += '</div>';
+                document.getElementById('health-status').innerHTML = healthHtml;
+            } else {
+                document.getElementById('health-status').innerHTML = '<p>No health data available yet.</p>';
+            }
+            
+            // Update latency chart
+            if (data.latency_history && data.latency_history.length > 0) {
+                updateLatencyChart(data.latency_history);
+                document.getElementById('chart-info').textContent = '';
+            } else {
+                document.getElementById('chart-info').textContent = 'No latency data available yet. Visit other pages to generate metrics.';
+                // Clear chart if exists
+                if (latencyChart) {
+                    latencyChart.destroy();
+                    latencyChart = null;
+                }
+            }
+            
+        } catch (error) {
+            console.error('Error updating dashboard:', error);
+            document.getElementById('avg-latency').textContent = 'Error';
+        }
+    }
+    
+    // Function to update the latency chart
+    function updateLatencyChart(latencyData) {
+        const ctx = document.getElementById('latency-chart').getContext('2d');
+        
+        // Process data for chart
+        const timestamps = latencyData.map(item => new Date(item.timestamp)).reverse();
+        const latencies = latencyData.map(item => item.latency).reverse();
+        
+        // Destroy existing chart if it exists
+        if (latencyChart) {
+            latencyChart.destroy();
+        }
+        
+        // Create new chart
+        latencyChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timestamps,
+                datasets: [{
+                    label: 'Latency (ms)',
+                    data: latencies,
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Latency (ms)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        },
+                        type: 'time',
+                        time: {
+                            unit: 'hour',
+                            displayFormats: {
+                                hour: 'HH:mm'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+    
+    // Initial load
+    updateDashboard();
+    
+    // Update every 30 seconds
+    setInterval(updateDashboard, 30000);
+</script>
+{% endblock %}

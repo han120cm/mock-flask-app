@@ -8,6 +8,7 @@ import requests
 import os
 import logging
 from dotenv import load_dotenv
+from sqlalchemy import case
 
 # Load environment variables from .env file
 load_dotenv()
@@ -96,6 +97,19 @@ class UserContent(db.Model):
 
     def __repr__(self):
         return f'<UserContent {self.filename}>'
+
+class PerformanceMetric(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    latency = db.Column(db.Integer)  # in milliseconds
+    region = db.Column(db.String(50))
+    cache_status = db.Column(db.String(20))  # HIT, MISS, EXPIRED
+    content_type = db.Column(db.String(20))  # image, video, page
+    user_agent = db.Column(db.String(200))
+    ip_address = db.Column(db.String(45))
+
+    def __repr__(self):
+        return f'<PerformanceMetric {self.region}:{self.latency}ms>'
 
 with app.app_context():
     db.create_all()
@@ -465,6 +479,270 @@ def test_cdn_page():
     except Exception as e:
         logger.error(f"Error in test_cdn_page route: {e}")
         return "Internal server error", 500
+
+@app.route("/dashboard")
+def dashboard_page():
+    """Render the CDN performance dashboard"""
+    try:
+        response = make_response(render_template('dashboard.html'))
+        return add_cache_headers(response, 'page')
+    except Exception as e:
+        logger.error(f"Error in dashboard_page route: {e}")
+        return "Internal server error", 500
+
+# In-memory storage for performance metrics (in production, use a database)
+cdn_metrics = {
+    'latency_history': [],
+    'regional_data': {},
+    'total_requests': 0,
+    'cache_hits': 0,
+    'cache_misses': 0
+}
+
+@app.route("/api/dashboard")
+def dashboard_api():
+    """API endpoint for dashboard data"""
+    try:
+        # Check if we have any real data
+        total_real_requests = PerformanceMetric.query.count()
+        
+        # If no real data, return simulated data for development
+        if total_real_requests == 0:
+            # Simulate some metrics data for development
+            import random
+            
+            # Generate some sample data for demonstration
+            regions = ['sea', 'us-east', 'us-west', 'eu-west', 'eu-central', 'asia-pacific']
+            region_names = {
+                'sea': 'Southeast Asia',
+                'us-east': 'US East',
+                'us-west': 'US West',
+                'eu-west': 'Europe West',
+                'eu-central': 'Europe Central',
+                'asia-pacific': 'Asia Pacific'
+            }
+            
+            # Generate regional performance data
+            regional_performance = {}
+            for region in regions:
+                regional_performance[region_names[region]] = {
+                    'latency': random.randint(20, 200),
+                    'requests': random.randint(1000, 50000),
+                    'cache_hit_ratio': random.randint(70, 95)
+                }
+            
+            # Calculate overall metrics
+            total_requests = sum(region['requests'] for region in regional_performance.values())
+            avg_latency = sum(region['latency'] for region in regional_performance.values()) / len(regional_performance)
+            cache_hit_ratio = sum(region['cache_hit_ratio'] for region in regional_performance.values()) / len(regional_performance)
+            
+            # Health status (randomly mark some as unhealthy for demonstration)
+            health_status = {}
+            for region in regions:
+                health_status[region_names[region]] = 'healthy' if random.random() > 0.1 else 'degraded'
+            
+            # Generate sample latency history
+            latency_history = []
+            now = datetime.utcnow()
+            for i in range(50):
+                latency_history.append({
+                    'timestamp': (now - timedelta(minutes=i*5)).isoformat(),
+                    'latency': random.randint(50, 300),
+                    'region': random.choice(list(region_names.values()))
+                })
+            
+            data = {
+                'average_latency': round(avg_latency, 1),
+                'cache_hit_ratio': round(cache_hit_ratio, 1),
+                'active_regions': len(regions),
+                'total_requests': total_requests,
+                'regional_performance': regional_performance,
+                'health_status': health_status,
+                'latency_history': latency_history
+            }
+            
+            # Debug logging
+            logger.info(f"Simulated dashboard data: {data}")
+            
+            return jsonify(data)
+        
+        # Get real metrics from database
+        from sqlalchemy import func, extract
+        
+        # Calculate overall metrics
+        total_requests = PerformanceMetric.query.count()
+        
+        # Calculate average latency
+        avg_latency_result = db.session.query(func.avg(PerformanceMetric.latency)).filter(PerformanceMetric.latency != None).first()
+        avg_latency = float(avg_latency_result[0]) if avg_latency_result[0] else 0
+        
+        # Calculate cache hit ratio
+        cache_hits = PerformanceMetric.query.filter(PerformanceMetric.cache_status.ilike('HIT')).count()
+        cache_hit_ratio = (cache_hits / total_requests * 100) if total_requests > 0 else 0
+        
+        # Get regional performance data
+        regional_data = db.session.query(
+            PerformanceMetric.region,
+            func.count(PerformanceMetric.id).label('request_count'),
+            func.avg(PerformanceMetric.latency).label('avg_latency'),
+            func.sum(case((PerformanceMetric.cache_status.ilike('HIT'), 1), else_=0)).label('cache_hits')
+        ).filter(
+            PerformanceMetric.region != None
+        ).group_by(
+            PerformanceMetric.region
+        ).all()
+        
+        regional_performance = {}
+        health_status = {}
+        
+        for region_data in regional_data:
+            region_name = region_data.region
+            requests = region_data.request_count
+            avg_lat = float(region_data.avg_latency) if region_data.avg_latency else 0
+            hits = region_data.cache_hits or 0
+            hit_ratio = (hits / requests * 100) if requests > 0 else 0
+            
+            regional_performance[region_name] = {
+                'latency': round(avg_lat, 1),
+                'requests': requests,
+                'cache_hit_ratio': round(hit_ratio, 1)
+            }
+            
+            # Simple health check - consider healthy if latency < 500ms
+            health_status[region_name] = 'healthy' if avg_lat < 500 else 'degraded'
+        
+        # Get recent latency history for charting (last 24 hours)
+        twenty_four_hours_ago = datetime.utcnow() - timedelta(hours=24)
+        recent_metrics = PerformanceMetric.query.filter(
+            PerformanceMetric.timestamp >= twenty_four_hours_ago,
+            PerformanceMetric.latency != None
+        ).order_by(PerformanceMetric.timestamp.desc()).limit(100).all()
+        
+        latency_history = []
+        for metric in recent_metrics:
+            latency_history.append({
+                'timestamp': metric.timestamp.isoformat(),
+                'latency': metric.latency,
+                'region': metric.region
+            })
+        
+        data = {
+            'average_latency': round(avg_latency, 1),
+            'cache_hit_ratio': round(cache_hit_ratio, 1),
+            'active_regions': len(regional_performance),
+            'total_requests': total_requests,
+            'regional_performance': regional_performance,
+            'health_status': health_status,
+            'latency_history': latency_history
+        }
+        
+        # Debug logging
+        logger.info(f"Real dashboard data: {data}")
+        
+        return jsonify(data)
+    except Exception as e:
+        logger.error(f"Error in dashboard_api route: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route("/api/collect-metrics", methods=['POST'])
+def collect_metrics():
+    """API endpoint to collect CDN performance metrics from clients"""
+    try:
+        data = request.get_json()
+        
+        # Extract metrics from the request
+        latency = data.get('latency')
+        region = data.get('region')
+        cache_status = data.get('cache_status')
+        content_type = data.get('content_type')
+        
+        # Store metrics in database
+        metric = PerformanceMetric(
+            latency=latency,
+            region=region,
+            cache_status=cache_status,
+            content_type=content_type,
+            user_agent=request.headers.get('User-Agent', ''),
+            ip_address=request.remote_addr
+        )
+        db.session.add(metric)
+        db.session.commit()
+        
+        # Update our in-memory metrics store
+        if latency:
+            cdn_metrics['latency_history'].append({
+                'timestamp': datetime.utcnow().isoformat(),
+                'latency': latency,
+                'region': region
+            })
+            
+            # Keep only the last 1000 entries
+            if len(cdn_metrics['latency_history']) > 1000:
+                cdn_metrics['latency_history'] = cdn_metrics['latency_history'][-1000:]
+        
+        if cache_status:
+            if cache_status.upper() == 'HIT':
+                cdn_metrics['cache_hits'] += 1
+            else:
+                cdn_metrics['cache_misses'] += 1
+        
+        cdn_metrics['total_requests'] += 1
+        
+        # Update regional data
+        if region:
+            if region not in cdn_metrics['regional_data']:
+                cdn_metrics['regional_data'][region] = {
+                    'requests': 0,
+                    'total_latency': 0,
+                    'cache_hits': 0,
+                    'cache_misses': 0
+                }
+            
+            cdn_metrics['regional_data'][region]['requests'] += 1
+            if latency:
+                cdn_metrics['regional_data'][region]['total_latency'] += latency
+            if cache_status:
+                if cache_status.upper() == 'HIT':
+                    cdn_metrics['regional_data'][region]['cache_hits'] += 1
+                else:
+                    cdn_metrics['regional_data'][region]['cache_misses'] += 1
+        
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        logger.error(f"Error in collect_metrics route: {e}")
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@app.route("/api/generate-test-data", methods=['POST'])
+def generate_test_data():
+    """API endpoint to generate test data for development"""
+    try:
+        import random
+        from datetime import timedelta
+        
+        # Generate 50 test metrics
+        test_regions = ['sea', 'us-east', 'us-west', 'eu-west', 'eu-central', 'asia-pacific', 'local-dev']
+        cache_statuses = ['HIT', 'MISS', 'EXPIRED']
+        content_types = ['page', 'image', 'video']
+        
+        for _ in range(50):
+            metric = PerformanceMetric(
+                latency=random.randint(50, 500),
+                region=random.choice(test_regions),
+                cache_status=random.choice(cache_statuses),
+                content_type=random.choice(content_types),
+                user_agent='Test Agent',
+                ip_address='127.0.0.1',
+                timestamp=datetime.utcnow() - timedelta(minutes=random.randint(0, 1440))  # Up to 24 hours ago
+            )
+            db.session.add(metric)
+        
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Generated 50 test metrics'})
+    except Exception as e:
+        logger.error(f"Error in generate_test_data route: {e}")
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == "__main__":

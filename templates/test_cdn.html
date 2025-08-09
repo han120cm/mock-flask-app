@@ -3,10 +3,19 @@
 {% block title %}CDN Test Page{% endblock %}
 
 {% block content %}
+<!-- CDN Metadata for tracking -->
+<meta name="cdn-region" content="{{ headers_info.get('X-CDN-Region', 'unknown') }}">
+<meta name="cache-status" content="{{ headers_info.get('X-Cache-Status', 'unknown') }}">
+
 <div class="container">
     <div class="header">
         <h1>🌐 CDN Test Page</h1>
         <p>This page helps you verify that your CDN is working correctly</p>
+        {% if headers_info.get('X-CDN-Region') %}
+        <div class="info-card">
+            <p class="cdn-info">{{ headers_info.get('X-CDN-Region') }}</p>
+        </div>
+        {% endif %}
     </div>
 
     <div class="section">
@@ -27,6 +36,7 @@
             <a href="{{ url_for('home') }}" class="test-link">🏠 Home Page</a>
             <a href="{{ url_for('show_images', group='trending') }}" class="test-link">📸 Trending Images</a>
             <a href="{{ url_for('show_videos', group='short-clips') }}" class="test-link">🎥 Short Videos</a>
+            <a href="{{ url_for('dashboard_page') }}" class="test-link">📈 Performance Dashboard</a>
             <a href="{{ url_for('debug_headers') }}" class="test-link">🔧 Debug Headers (JSON)</a>
         </div>
     </div>
