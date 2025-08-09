@@ -1,0 +1,786 @@
+=== CDN Performance Test Results - Sun Aug 10 01:28:53 WIB 2025 ===
+
+===================================================
+REGION: asia-east1
+JOB: k6-test-job-asia-east1-1754764119
+===================================================
+
+Container called exit(0).
+default ✓ [ 100% ] 5 VUs  30s
+running (0m34.3s), 0/5 VUs, 35 complete and 0 interrupted iterations
+    data_sent...............................................................: 14 kB   408 B/s
+    data_received...........................................................: 541 MB  16 MB/s
+    NETWORK
+    vus_max.................................................................: 5       min=5        max=5
+    vus.....................................................................: 1       min=1        max=5
+    iterations..............................................................: 35      1.019227/s
+    iteration_duration......................................................: avg=4.7s    min=3.6s    med=4.64s    max=5.67s   p(90)=5.42s   p(95)=5.59s  
+    EXECUTION
+    http_reqs...............................................................: 85      2.475264/s
+    http_req_failed.........................................................: 0.00%   0 out of 85
+      { expected_response:true }............................................: avg=462.6ms min=62.79ms med=176.93ms max=2s      p(90)=1.49s   p(95)=1.54s  
+    http_req_duration.......................................................: avg=462.6ms min=62.79ms med=176.93ms max=2s      p(90)=1.49s   p(95)=1.54s  
+    HTTP
+    video_requests_total....................................................: 20      0.582415/s
+    video_req_duration......................................................: avg=1.53s   min=1.4s    med=1.47s    max=2s      p(90)=1.8s    p(95)=1.81s  
+    video_cache_hit_rate....................................................: 100.00% 20 out of 20
+    image_requests_total....................................................: 15      0.436811/s
+    image_req_duration......................................................: avg=64.72ms min=62.87ms med=64.27ms  max=67.15ms p(90)=66.88ms p(95)=67.04ms
+    image_cache_hit_rate....................................................: 100.00% 15 out of 15
+    cache_hit_rate..........................................................: 100.00% 35 out of 35
+    CUSTOM
+    ✓ video category tutorials loaded
+    ✓ image category popular loaded
+    ✓ image category general loaded
+    ✓ image category trending loaded
+    ✓ video response time reasonable
+    ✓ video request successful
+    ✓ image response time reasonable
+    ✓ static image request completed
+    ✓ image category rare loaded
+    ✓ home page loaded
+    ✓ video category documentaries loaded
+    ✓ video category archived loaded
+    ✓ video category short-clips loaded
+    checks_failed......................: 0.00%   0 out of 120
+    checks_succeeded...................: 100.00% 120 out of 120
+    checks_total.......................: 120     3.494491/s
+  █ TOTAL RESULTS 
+    ✓ 'p(95)<10000' p(95)=1.81s
+    video_req_duration
+    ✓ 'p(95)<3000' p(95)=67.04ms
+    image_req_duration
+    ✓ 'rate<0.1' rate=0.00%
+    http_req_failed
+    ✓ 'p(95)<5000' p(95)=1.54s
+    http_req_duration
+    ✓ 'rate>0.5' rate=100.00%
+    cache_hit_rate
+  █ THRESHOLDS 
+time="2025-08-09T18:29:36Z" level=info msg="\n================================================" source=console
+time="2025-08-09T18:29:36Z" level=info msg="   Errors: 0" source=console
+time="2025-08-09T18:29:36Z" level=info msg="   Cache Hit Rate: N/A%" source=console
+time="2025-08-09T18:29:36Z" level=info msg="   Max Latency: N/Ams" source=console
+time="2025-08-09T18:29:36Z" level=info msg="   Min Latency: N/A" source=console
+time="2025-08-09T18:29:36Z" level=info msg="   Average Latency: N/Ams" source=console
+time="2025-08-09T18:29:36Z" level=info msg="   Requests: 0" source=console
+time="2025-08-09T18:29:36Z" level=info msg="\n🖼️  IMAGE PERFORMANCE:" source=console
+time="2025-08-09T18:29:36Z" level=info msg="   Errors: 0" source=console
+time="2025-08-09T18:29:36Z" level=info msg="   Cache Hit Rate: N/A%" source=console
+time="2025-08-09T18:29:36Z" level=info msg="   Max Latency: N/Ams" source=console
+time="2025-08-09T18:29:36Z" level=info msg="   Min Latency: N/A" source=console
+time="2025-08-09T18:29:36Z" level=info msg="   Average Latency: N/Ams" source=console
+time="2025-08-09T18:29:36Z" level=info msg="   Requests: 0" source=console
+time="2025-08-09T18:29:36Z" level=info msg="\n📹 VIDEO PERFORMANCE:" source=console
+time="2025-08-09T18:29:36Z" level=info msg="\n=== CDN Performance Test Results for asia-east1 ===" source=console
+default ↓ [ 100% ] 5 VUs  30s
+running (0m34.0s), 1/5 VUs, 34 complete and 0 interrupted iterations
+default ↓ [ 100% ] 5 VUs  30s
+running (0m33.0s), 3/5 VUs, 32 complete and 0 interrupted iterations
+default ↓ [ 100% ] 5 VUs  30s
+running (0m32.0s), 4/5 VUs, 31 complete and 0 interrupted iterations
+time="2025-08-09T18:29:34Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_3: Status=200 | Duration=1800.32ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:34Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_2: Status=200 | Duration=64.33ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:34Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_2.jpg" source=console
+time="2025-08-09T18:29:33Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_8: Status=200 | Duration=1494.85ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default ↓ [ 100% ] 5 VUs  30s
+running (0m31.0s), 5/5 VUs, 30 complete and 0 interrupted iterations
+time="2025-08-09T18:29:33Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_10: Status=200 | Duration=1546.14ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:32Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_3.mp4" source=console
+time="2025-08-09T18:29:32Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_2: Status=200 | Duration=63.99ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [ 100% ] 5 VUs  30.0s/30s
+running (0m30.0s), 5/5 VUs, 30 complete and 0 interrupted iterations
+time="2025-08-09T18:29:32Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_8.mp4" source=console
+time="2025-08-09T18:29:32Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_2.jpg" source=console
+time="2025-08-09T18:29:31Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+time="2025-08-09T18:29:31Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_10.mp4" source=console
+default   [  97% ] 5 VUs  29.0s/30s
+running (0m29.0s), 5/5 VUs, 29 complete and 0 interrupted iterations
+time="2025-08-09T18:29:31Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:31Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:30Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+default   [  93% ] 5 VUs  28.0s/30s
+running (0m28.0s), 5/5 VUs, 26 complete and 0 interrupted iterations
+time="2025-08-09T18:29:29Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+time="2025-08-09T18:29:29Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_8: Status=200 | Duration=1433.12ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  90% ] 5 VUs  27.0s/30s
+running (0m27.0s), 5/5 VUs, 25 complete and 0 interrupted iterations
+time="2025-08-09T18:29:28Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_2: Status=200 | Duration=64.28ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:28Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_2.jpg" source=console
+time="2025-08-09T18:29:28Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_1: Status=200 | Duration=62.88ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:28Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_1.jpg" source=console
+time="2025-08-09T18:29:28Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_4: Status=200 | Duration=1503.78ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  87% ] 5 VUs  26.0s/30s
+running (0m26.0s), 5/5 VUs, 25 complete and 0 interrupted iterations
+time="2025-08-09T18:29:28Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_8.mp4" source=console
+time="2025-08-09T18:29:28Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_6: Status=200 | Duration=1483.91ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  83% ] 5 VUs  25.0s/30s
+running (0m25.0s), 5/5 VUs, 25 complete and 0 interrupted iterations
+time="2025-08-09T18:29:27Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:26Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_4.mp4" source=console
+time="2025-08-09T18:29:26Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+time="2025-08-09T18:29:26Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_6.mp4" source=console
+time="2025-08-09T18:29:26Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+default   [  80% ] 5 VUs  24.0s/30s
+running (0m24.0s), 5/5 VUs, 22 complete and 0 interrupted iterations
+time="2025-08-09T18:29:25Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:25Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_4: Status=200 | Duration=1434.18ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:25Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+default   [  77% ] 5 VUs  23.0s/30s
+running (0m23.0s), 5/5 VUs, 20 complete and 0 interrupted iterations
+time="2025-08-09T18:29:24Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_4: Status=200 | Duration=1431.60ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  73% ] 5 VUs  22.0s/30s
+running (0m22.0s), 5/5 VUs, 20 complete and 0 interrupted iterations
+time="2025-08-09T18:29:24Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_4.mp4" source=console
+time="2025-08-09T18:29:24Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_7: Status=200 | Duration=1517.83ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:24Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_1: Status=200 | Duration=63.50ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:24Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_1.jpg" source=console
+default   [  70% ] 5 VUs  21.0s/30s
+running (0m21.0s), 5/5 VUs, 20 complete and 0 interrupted iterations
+time="2025-08-09T18:29:23Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_4.mp4" source=console
+time="2025-08-09T18:29:22Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:22Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_7.mp4" source=console
+time="2025-08-09T18:29:22Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_4: Status=200 | Duration=65.93ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:22Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_4.jpg" source=console
+default   [  67% ] 5 VUs  20.0s/30s
+running (0m20.0s), 5/5 VUs, 19 complete and 0 interrupted iterations
+time="2025-08-09T18:29:21Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:21Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+time="2025-08-09T18:29:21Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+default   [  63% ] 5 VUs  19.0s/30s
+running (0m19.0s), 5/5 VUs, 16 complete and 0 interrupted iterations
+time="2025-08-09T18:29:20Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_1: Status=200 | Duration=1440.55ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  60% ] 5 VUs  18.0s/30s
+running (0m18.0s), 5/5 VUs, 16 complete and 0 interrupted iterations
+time="2025-08-09T18:29:20Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_5: Status=200 | Duration=1418.74ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:20Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+time="2025-08-09T18:29:19Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_6: Status=200 | Duration=1409.99ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  57% ] 5 VUs  17.0s/30s
+running (0m17.0s), 5/5 VUs, 15 complete and 0 interrupted iterations
+time="2025-08-09T18:29:18Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_1.mp4" source=console
+time="2025-08-09T18:29:18Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_5.mp4" source=console
+time="2025-08-09T18:29:18Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_1: Status=200 | Duration=1504.36ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  53% ] 5 VUs  16.0s/30s
+running (0m16.0s), 5/5 VUs, 15 complete and 0 interrupted iterations
+time="2025-08-09T18:29:18Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_6.mp4" source=console
+time="2025-08-09T18:29:18Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_5: Status=200 | Duration=66.17ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:18Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_5.jpg" source=console
+time="2025-08-09T18:29:17Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:17Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+default   [  50% ] 5 VUs  15.0s/30s
+running (0m15.0s), 5/5 VUs, 13 complete and 0 interrupted iterations
+time="2025-08-09T18:29:17Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:16Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_1.mp4" source=console
+default   [  47% ] 5 VUs  14.0s/30s
+running (0m14.0s), 5/5 VUs, 12 complete and 0 interrupted iterations
+time="2025-08-09T18:29:15Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+time="2025-08-09T18:29:15Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:15Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_10: Status=200 | Duration=63.20ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:15Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_10.jpg" source=console
+default   [  43% ] 5 VUs  13.0s/30s
+running (0m13.0s), 5/5 VUs, 10 complete and 0 interrupted iterations
+time="2025-08-09T18:29:14Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_6: Status=200 | Duration=1441.65ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:14Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_10: Status=200 | Duration=63.37ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:14Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_10.jpg" source=console
+default   [  40% ] 5 VUs  12.0s/30s
+running (0m12.0s), 5/5 VUs, 10 complete and 0 interrupted iterations
+time="2025-08-09T18:29:13Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_2: Status=200 | Duration=66.70ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:13Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_2.jpg" source=console
+time="2025-08-09T18:29:13Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_5: Status=200 | Duration=63.40ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  37% ] 5 VUs  11.0s/30s
+running (0m11.0s), 5/5 VUs, 10 complete and 0 interrupted iterations
+time="2025-08-09T18:29:13Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+time="2025-08-09T18:29:13Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_5.jpg" source=console
+time="2025-08-09T18:29:13Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_6.mp4" source=console
+default   [  33% ] 5 VUs  10.0s/30s
+running (0m10.0s), 5/5 VUs, 9 complete and 0 interrupted iterations
+time="2025-08-09T18:29:12Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+time="2025-08-09T18:29:12Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:11Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+default   [  30% ] 5 VUs  09.0s/30s
+running (0m09.0s), 5/5 VUs, 6 complete and 0 interrupted iterations
+time="2025-08-09T18:29:11Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+time="2025-08-09T18:29:10Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_7: Status=200 | Duration=1432.85ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  27% ] 5 VUs  08.0s/30s
+running (0m08.0s), 5/5 VUs, 5 complete and 0 interrupted iterations
+time="2025-08-09T18:29:10Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_4: Status=200 | Duration=63.65ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:10Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_4.jpg" source=console
+time="2025-08-09T18:29:09Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_5: Status=200 | Duration=1465.41ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:09Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_6: Status=200 | Duration=1445.57ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  23% ] 5 VUs  07.0s/30s
+running (0m07.0s), 5/5 VUs, 5 complete and 0 interrupted iterations
+time="2025-08-09T18:29:09Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_7.mp4" source=console
+time="2025-08-09T18:29:08Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_2: Status=200 | Duration=65.30ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:08Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_2.jpg" source=console
+default   [  20% ] 5 VUs  06.0s/30s
+running (0m06.0s), 5/5 VUs, 5 complete and 0 interrupted iterations
+time="2025-08-09T18:29:08Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_5.mp4" source=console
+time="2025-08-09T18:29:08Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_6.mp4" source=console
+time="2025-08-09T18:29:07Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:07Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+default   [  17% ] 5 VUs  05.0s/30s
+running (0m05.0s), 5/5 VUs, 3 complete and 0 interrupted iterations
+time="2025-08-09T18:29:06Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:06Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:06Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+default   [  13% ] 5 VUs  04.0s/30s
+running (0m04.0s), 5/5 VUs, 0 complete and 0 interrupted iterations
+time="2025-08-09T18:29:05Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_5: Status=200 | Duration=2006.44ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:05Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_2: Status=200 | Duration=1808.49ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:05Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_8: Status=200 | Duration=1630.51ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  10% ] 5 VUs  03.0s/30s
+running (0m03.0s), 5/5 VUs, 0 complete and 0 interrupted iterations
+time="2025-08-09T18:29:04Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_4: Status=200 | Duration=67.00ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:04Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_9: Status=200 | Duration=67.16ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:04Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_4.jpg" source=console
+time="2025-08-09T18:29:04Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_9.jpg" source=console
+default   [   7% ] 5 VUs  02.0s/30s
+running (0m02.0s), 5/5 VUs, 0 complete and 0 interrupted iterations
+time="2025-08-09T18:29:03Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_2.mp4" source=console
+time="2025-08-09T18:29:03Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_8.mp4" source=console
+time="2025-08-09T18:29:03Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_5.mp4" source=console
+default   [   3% ] 5 VUs  01.0s/30s
+running (0m01.0s), 5/5 VUs, 0 complete and 0 interrupted iterations
+time="2025-08-09T18:29:02Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:02Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:02Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+time="2025-08-09T18:29:02Z" level=info msg="[asia-east1] Starting video browse test..." source=console
+time="2025-08-09T18:29:02Z" level=info msg="[asia-east1] Starting image browse test..." source=console
+time="2025-08-09T18:29:02Z" level=info msg="=====================================" source=console
+time="2025-08-09T18:29:02Z" level=info msg="Virtual users: 5" source=console
+time="2025-08-09T18:29:02Z" level=info msg="Test duration: 30s" source=console
+time="2025-08-09T18:29:02Z" level=info msg="CDN: https://cdn.sohryuu.me" source=console
+time="2025-08-09T18:29:02Z" level=info msg="Target app: https://web-server-577176926733.us-central1.run.app" source=console
+time="2025-08-09T18:29:02Z" level=info msg="Region: asia-east1" source=console
+time="2025-08-09T18:29:02Z" level=info msg="=== CDN Performance Test Starting ===" source=console
+              * default: 5 looping VUs for 30s (gracefulStop: 30s)
+     scenarios: (100.00%) 1 scenario, 5 max VUs, 1m0s max duration (incl. graceful stop):
+        output: -
+        script: /home/k6/load-test-ver2.js
+     execution: local
+ / __________ \  |_|\_\  \_____/ 
+  /          \   |   (  |  (‾)  |
+   /  \/    \    | |/ /  /   ‾‾\ 
+    /\  /  \     |\  __   /  /   
+         /\      Grafana   /‾‾/  
+Starting new instance. Reason: AUTOSCALING - Instance started due to configured scaling factors (e.g. CPU utilization, request throughput, etc.) or no existing capacity for current traffic.
+
+===================================================
+REGION: asia-northeast1
+JOB: k6-test-job-asia-northeast1-1754764124
+===================================================
+
+Container called exit(0).
+default ✓ [ 100% ] 5 VUs  30s
+running (0m34.1s), 0/5 VUs, 32 complete and 0 interrupted iterations
+    data_sent...............................................................: 13 kB   382 B/s
+    data_received...........................................................: 514 MB  15 MB/s
+    NETWORK
+    vus_max.................................................................: 5       min=5        max=5
+    vus.....................................................................: 1       min=1        max=5
+    iterations..............................................................: 32      0.937973/s
+    iteration_duration......................................................: avg=5.07s    min=3.46s   med=4.84s    max=7.25s    p(90)=6.6s     p(95)=6.79s   
+    EXECUTION
+    http_reqs...............................................................: 77      2.256997/s
+    http_req_failed.........................................................: 0.00%   0 out of 77
+      { expected_response:true }............................................: avg=715.79ms min=84.71ms med=173.04ms max=3.74s    p(90)=2.26s    p(95)=2.93s   
+    http_req_duration.......................................................: avg=715.79ms min=84.71ms med=173.04ms max=3.74s    p(90)=2.26s    p(95)=2.93s   
+    HTTP
+    video_requests_total....................................................: 19      0.556921/s
+    video_req_duration......................................................: avg=2.41s    min=1.92s   med=2.19s    max=3.74s    p(90)=3.12s    p(95)=3.23s   
+    video_cache_hit_rate....................................................: 100.00% 19 out of 19
+    image_requests_total....................................................: 13      0.381051/s
+    image_req_duration......................................................: avg=99.2ms   min=84.71ms med=86.02ms  max=172.52ms p(90)=154.05ms p(95)=171.35ms
+    image_cache_hit_rate....................................................: 100.00% 13 out of 13
+    cache_hit_rate..........................................................: 100.00% 32 out of 32
+    CUSTOM
+    ✓ image category rare loaded
+    ✓ image category popular loaded
+    ✓ video category documentaries loaded
+    ✓ video category short-clips loaded
+    ✓ image category general loaded
+    ✓ video response time reasonable
+    ✓ video request successful
+    ✓ image response time reasonable
+    ✓ static image request completed
+    ✓ image category trending loaded
+    ✓ video category tutorials loaded
+    ✓ video category archived loaded
+    ✓ home page loaded
+    checks_failed......................: 0.00%   0 out of 109
+    checks_succeeded...................: 100.00% 109 out of 109
+    checks_total.......................: 109     3.19497/s
+  █ TOTAL RESULTS 
+    ✓ 'p(95)<10000' p(95)=3.23s
+    video_req_duration
+    ✓ 'p(95)<3000' p(95)=171.35ms
+    image_req_duration
+    ✓ 'rate<0.1' rate=0.00%
+    http_req_failed
+    ✓ 'p(95)<5000' p(95)=2.93s
+    http_req_duration
+    ✓ 'rate>0.5' rate=100.00%
+    cache_hit_rate
+  █ THRESHOLDS 
+time="2025-08-09T18:30:34Z" level=info msg="\n================================================" source=console
+time="2025-08-09T18:30:34Z" level=info msg="   Errors: 0" source=console
+time="2025-08-09T18:30:34Z" level=info msg="   Cache Hit Rate: N/A%" source=console
+time="2025-08-09T18:30:34Z" level=info msg="   Max Latency: N/Ams" source=console
+time="2025-08-09T18:30:34Z" level=info msg="   Min Latency: N/A" source=console
+time="2025-08-09T18:30:34Z" level=info msg="   Average Latency: N/Ams" source=console
+time="2025-08-09T18:30:34Z" level=info msg="   Requests: 0" source=console
+time="2025-08-09T18:30:34Z" level=info msg="\n🖼️  IMAGE PERFORMANCE:" source=console
+time="2025-08-09T18:30:34Z" level=info msg="   Errors: 0" source=console
+time="2025-08-09T18:30:34Z" level=info msg="   Cache Hit Rate: N/A%" source=console
+time="2025-08-09T18:30:34Z" level=info msg="   Max Latency: N/Ams" source=console
+time="2025-08-09T18:30:34Z" level=info msg="   Min Latency: N/A" source=console
+time="2025-08-09T18:30:34Z" level=info msg="   Average Latency: N/Ams" source=console
+time="2025-08-09T18:30:34Z" level=info msg="   Requests: 0" source=console
+time="2025-08-09T18:30:34Z" level=info msg="\n📹 VIDEO PERFORMANCE:" source=console
+time="2025-08-09T18:30:34Z" level=info msg="\n=== CDN Performance Test Results for asia-northeast1 ===" source=console
+default ↓ [ 100% ] 5 VUs  30s
+running (0m34.0s), 1/5 VUs, 31 complete and 0 interrupted iterations
+default ↓ [ 100% ] 5 VUs  30s
+running (0m33.0s), 2/5 VUs, 30 complete and 0 interrupted iterations
+default ↓ [ 100% ] 5 VUs  30s
+running (0m32.0s), 4/5 VUs, 28 complete and 0 interrupted iterations
+time="2025-08-09T18:30:32Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_1: Status=200 | Duration=1927.44ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:32Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_8: Status=200 | Duration=84.80ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:31Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_8.jpg" source=console
+default ↓ [ 100% ] 5 VUs  30s
+running (0m31.0s), 4/5 VUs, 28 complete and 0 interrupted iterations
+default   [ 100% ] 5 VUs  30.0s/30s
+running (0m30.0s), 5/5 VUs, 27 complete and 0 interrupted iterations
+time="2025-08-09T18:30:30Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_1.mp4" source=console
+time="2025-08-09T18:30:30Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_7: Status=200 | Duration=2897.76ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:30Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_8: Status=200 | Duration=84.71ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:30Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_8.jpg" source=console
+default   [  97% ] 5 VUs  29.0s/30s
+running (0m29.0s), 5/5 VUs, 27 complete and 0 interrupted iterations
+time="2025-08-09T18:30:29Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+time="2025-08-09T18:30:29Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_7: Status=200 | Duration=86.82ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:29Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_7.jpg" source=console
+time="2025-08-09T18:30:29Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+default   [  93% ] 5 VUs  28.0s/30s
+running (0m28.0s), 5/5 VUs, 25 complete and 0 interrupted iterations
+time="2025-08-09T18:30:28Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_3: Status=200 | Duration=170.58ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:28Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_3: Status=200 | Duration=172.52ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:27Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_3.jpg" source=console
+time="2025-08-09T18:30:27Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_3.jpg" source=console
+default   [  90% ] 5 VUs  27.0s/30s
+running (0m27.0s), 5/5 VUs, 25 complete and 0 interrupted iterations
+time="2025-08-09T18:30:27Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+time="2025-08-09T18:30:27Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_7.mp4" source=console
+time="2025-08-09T18:30:27Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+default   [  87% ] 5 VUs  26.0s/30s
+running (0m26.0s), 5/5 VUs, 23 complete and 0 interrupted iterations
+time="2025-08-09T18:30:26Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:26Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_1: Status=200 | Duration=85.81ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:25Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_1.jpg" source=console
+default   [  83% ] 5 VUs  25.0s/30s
+running (0m25.0s), 5/5 VUs, 22 complete and 0 interrupted iterations
+time="2025-08-09T18:30:25Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+time="2025-08-09T18:30:25Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+time="2025-08-09T18:30:25Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_1: Status=200 | Duration=3113.48ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:24Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_7: Status=200 | Duration=2174.47ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  80% ] 5 VUs  24.0s/30s
+running (0m24.0s), 5/5 VUs, 20 complete and 0 interrupted iterations
+time="2025-08-09T18:30:24Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_6: Status=200 | Duration=2056.15ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  77% ] 5 VUs  23.0s/30s
+running (0m23.0s), 5/5 VUs, 20 complete and 0 interrupted iterations
+time="2025-08-09T18:30:23Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+time="2025-08-09T18:30:23Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_1: Status=200 | Duration=2126.95ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  73% ] 5 VUs  22.0s/30s
+running (0m22.0s), 5/5 VUs, 19 complete and 0 interrupted iterations
+time="2025-08-09T18:30:22Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_7.mp4" source=console
+time="2025-08-09T18:30:22Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_6.mp4" source=console
+time="2025-08-09T18:30:22Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_1.mp4" source=console
+time="2025-08-09T18:30:21Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_2: Status=200 | Duration=86.52ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  70% ] 5 VUs  21.0s/30s
+running (0m21.0s), 5/5 VUs, 19 complete and 0 interrupted iterations
+time="2025-08-09T18:30:21Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_2.jpg" source=console
+time="2025-08-09T18:30:21Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_1.mp4" source=console
+time="2025-08-09T18:30:21Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:20Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:20Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+default   [  67% ] 5 VUs  20.0s/30s
+running (0m20.0s), 5/5 VUs, 16 complete and 0 interrupted iterations
+time="2025-08-09T18:30:20Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_9: Status=200 | Duration=2190.44ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:20Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:19Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_4: Status=200 | Duration=2052.92ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  63% ] 5 VUs  19.0s/30s
+running (0m19.0s), 5/5 VUs, 15 complete and 0 interrupted iterations
+time="2025-08-09T18:30:19Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+time="2025-08-09T18:30:19Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_8: Status=200 | Duration=3099.59ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  60% ] 5 VUs  18.0s/30s
+running (0m18.0s), 5/5 VUs, 14 complete and 0 interrupted iterations
+time="2025-08-09T18:30:18Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_9.mp4" source=console
+time="2025-08-09T18:30:18Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_9: Status=200 | Duration=87.42ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:17Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_9.jpg" source=console
+time="2025-08-09T18:30:17Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_9: Status=200 | Duration=1921.67ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:17Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_4.mp4" source=console
+default   [  57% ] 5 VUs  17.0s/30s
+running (0m17.0s), 5/5 VUs, 14 complete and 0 interrupted iterations
+time="2025-08-09T18:30:17Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+default   [  53% ] 5 VUs  16.0s/30s
+running (0m16.0s), 5/5 VUs, 13 complete and 0 interrupted iterations
+time="2025-08-09T18:30:16Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:16Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_8.mp4" source=console
+time="2025-08-09T18:30:15Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_9.mp4" source=console
+default   [  50% ] 5 VUs  15.0s/30s
+running (0m15.0s), 5/5 VUs, 12 complete and 0 interrupted iterations
+time="2025-08-09T18:30:15Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+time="2025-08-09T18:30:15Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_2: Status=200 | Duration=2233.09ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:14Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+default   [  47% ] 5 VUs  14.0s/30s
+running (0m14.0s), 5/5 VUs, 10 complete and 0 interrupted iterations
+time="2025-08-09T18:30:14Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:14Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_6: Status=200 | Duration=1968.52ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  43% ] 5 VUs  13.0s/30s
+running (0m13.0s), 5/5 VUs, 9 complete and 0 interrupted iterations
+time="2025-08-09T18:30:13Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_4: Status=200 | Duration=2086.90ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:13Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_5: Status=200 | Duration=85.65ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:13Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_2.mp4" source=console
+time="2025-08-09T18:30:13Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_5.jpg" source=console
+default   [  40% ] 5 VUs  12.0s/30s
+running (0m12.0s), 5/5 VUs, 9 complete and 0 interrupted iterations
+time="2025-08-09T18:30:12Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_6.mp4" source=console
+time="2025-08-09T18:30:12Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_7: Status=200 | Duration=3175.85ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:12Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+default   [  37% ] 5 VUs  11.0s/30s
+running (0m11.0s), 5/5 VUs, 8 complete and 0 interrupted iterations
+time="2025-08-09T18:30:11Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_4.mp4" source=console
+time="2025-08-09T18:30:11Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:11Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+default   [  33% ] 5 VUs  10.0s/30s
+running (0m10.0s), 5/5 VUs, 6 complete and 0 interrupted iterations
+time="2025-08-09T18:30:10Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:09Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_8: Status=200 | Duration=84.96ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  30% ] 5 VUs  09.0s/30s
+running (0m09.0s), 5/5 VUs, 5 complete and 0 interrupted iterations
+time="2025-08-09T18:30:09Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_8.jpg" source=console
+time="2025-08-09T18:30:09Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_7.mp4" source=console
+time="2025-08-09T18:30:08Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_9: Status=200 | Duration=87.97ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:08Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_9.jpg" source=console
+default   [  27% ] 5 VUs  08.0s/30s
+running (0m08.0s), 5/5 VUs, 5 complete and 0 interrupted iterations
+time="2025-08-09T18:30:08Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_6: Status=200 | Duration=1936.38ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:08Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_2: Status=200 | Duration=85.93ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:08Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_2.jpg" source=console
+time="2025-08-09T18:30:08Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+default   [  23% ] 5 VUs  07.0s/30s
+running (0m07.0s), 5/5 VUs, 4 complete and 0 interrupted iterations
+time="2025-08-09T18:30:07Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+default   [  20% ] 5 VUs  06.0s/30s
+running (0m06.0s), 5/5 VUs, 3 complete and 0 interrupted iterations
+time="2025-08-09T18:30:06Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_6.mp4" source=console
+time="2025-08-09T18:30:06Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+time="2025-08-09T18:30:06Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_6: Status=200 | Duration=3746.17ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:05Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+default   [  17% ] 5 VUs  05.0s/30s
+running (0m05.0s), 5/5 VUs, 1 complete and 0 interrupted iterations
+time="2025-08-09T18:30:05Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:04Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_2: Status=200 | Duration=2529.09ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  13% ] 5 VUs  04.0s/30s
+running (0m04.0s), 5/5 VUs, 0 complete and 0 interrupted iterations
+time="2025-08-09T18:30:04Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_4: Status=200 | Duration=2420.64ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:04Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_8: Status=200 | Duration=2317.06ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  10% ] 5 VUs  03.0s/30s
+running (0m03.0s), 5/5 VUs, 0 complete and 0 interrupted iterations
+time="2025-08-09T18:30:03Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_5: Status=200 | Duration=86.02ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:03Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_5.jpg" source=console
+default   [   7% ] 5 VUs  02.0s/30s
+running (0m02.0s), 5/5 VUs, 0 complete and 0 interrupted iterations
+time="2025-08-09T18:30:02Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_6.mp4" source=console
+time="2025-08-09T18:30:02Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_8.mp4" source=console
+time="2025-08-09T18:30:02Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_4.mp4" source=console
+time="2025-08-09T18:30:02Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_2.mp4" source=console
+default   [   3% ] 5 VUs  01.0s/30s
+running (0m01.0s), 5/5 VUs, 0 complete and 0 interrupted iterations
+time="2025-08-09T18:30:00Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:00Z" level=info msg="[asia-northeast1] Starting image browse test..." source=console
+time="2025-08-09T18:30:00Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:00Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:00Z" level=info msg="[asia-northeast1] Starting video browse test..." source=console
+time="2025-08-09T18:30:00Z" level=info msg="=====================================" source=console
+time="2025-08-09T18:30:00Z" level=info msg="Virtual users: 5" source=console
+time="2025-08-09T18:30:00Z" level=info msg="Test duration: 30s" source=console
+time="2025-08-09T18:30:00Z" level=info msg="CDN: https://cdn.sohryuu.me" source=console
+time="2025-08-09T18:30:00Z" level=info msg="Target app: https://web-server-577176926733.us-central1.run.app" source=console
+time="2025-08-09T18:30:00Z" level=info msg="Region: asia-northeast1" source=console
+time="2025-08-09T18:30:00Z" level=info msg="=== CDN Performance Test Starting ===" source=console
+              * default: 5 looping VUs for 30s (gracefulStop: 30s)
+     scenarios: (100.00%) 1 scenario, 5 max VUs, 1m0s max duration (incl. graceful stop):
+        output: -
+        script: /home/k6/load-test-ver2.js
+     execution: local
+ / __________ \  |_|\_\  \_____/ 
+  /          \   |   (  |  (‾)  |
+   /  \/    \    | |/ /  /   ‾‾\ 
+    /\  /  \     |\  __   /  /   
+         /\      Grafana   /‾‾/  
+Starting new instance. Reason: AUTOSCALING - Instance started due to configured scaling factors (e.g. CPU utilization, request throughput, etc.) or no existing capacity for current traffic.
+
+===================================================
+REGION: asia-southeast1
+JOB: k6-test-job-asia-southeast1-1754764129
+===================================================
+
+Container called exit(0).
+time="2025-08-09T18:32:55Z" level=info msg="\n================================================" source=console
+time="2025-08-09T18:32:55Z" level=info msg="   Errors: 0" source=console
+time="2025-08-09T18:32:55Z" level=info msg="   Cache Hit Rate: N/A%" source=console
+time="2025-08-09T18:32:55Z" level=info msg="   Max Latency: N/Ams" source=console
+time="2025-08-09T18:32:55Z" level=info msg="   Min Latency: N/A" source=console
+time="2025-08-09T18:32:55Z" level=info msg="   Average Latency: N/Ams" source=console
+time="2025-08-09T18:32:55Z" level=info msg="   Requests: 0" source=console
+time="2025-08-09T18:32:55Z" level=info msg="\n🖼️  IMAGE PERFORMANCE:" source=console
+time="2025-08-09T18:32:55Z" level=info msg="   Errors: 0" source=console
+time="2025-08-09T18:32:55Z" level=info msg="   Cache Hit Rate: N/A%" source=console
+time="2025-08-09T18:32:55Z" level=info msg="   Max Latency: N/Ams" source=console
+time="2025-08-09T18:32:55Z" level=info msg="   Min Latency: N/A" source=console
+time="2025-08-09T18:32:55Z" level=info msg="   Average Latency: N/Ams" source=console
+time="2025-08-09T18:32:55Z" level=info msg="   Requests: 0" source=console
+time="2025-08-09T18:32:55Z" level=info msg="\n📹 VIDEO PERFORMANCE:" source=console
+time="2025-08-09T18:32:55Z" level=info msg="\n=== CDN Performance Test Results for asia-southeast1 ===" source=console
+default ↓ [ 100% ] 5 VUs  30s
+running (0m34.0s), 1/5 VUs, 33 complete and 0 interrupted iterations
+default ↓ [ 100% ] 5 VUs  30s
+running (0m33.0s), 2/5 VUs, 32 complete and 0 interrupted iterations
+time="2025-08-09T18:32:52Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_3: Status=200 | Duration=1248.20ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:52Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_9: Status=200 | Duration=16.83ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:52Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_9.jpg" source=console
+default ↓ [ 100% ] 5 VUs  30s
+running (0m32.0s), 2/5 VUs, 32 complete and 0 interrupted iterations
+time="2025-08-09T18:32:51Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_3.mp4" source=console
+default ↓ [ 100% ] 5 VUs  30s
+running (0m31.0s), 2/5 VUs, 32 complete and 0 interrupted iterations
+default   [ 100% ] 5 VUs  30.0s/30s
+running (0m30.0s), 5/5 VUs, 29 complete and 0 interrupted iterations
+time="2025-08-09T18:32:50Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+time="2025-08-09T18:32:50Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+default   [  97% ] 5 VUs  29.0s/30s
+running (0m29.0s), 5/5 VUs, 27 complete and 0 interrupted iterations
+time="2025-08-09T18:32:49Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_3: Status=200 | Duration=33.06ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:49Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_3.jpg" source=console
+time="2025-08-09T18:32:48Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_7: Status=200 | Duration=1472.82ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:48Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_2: Status=200 | Duration=22.83ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:48Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_2.jpg" source=console
+time="2025-08-09T18:32:48Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_5: Status=200 | Duration=1700.87ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  93% ] 5 VUs  28.0s/30s
+running (0m28.0s), 5/5 VUs, 27 complete and 0 interrupted iterations
+time="2025-08-09T18:32:47Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_2: Status=200 | Duration=1083.41ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:47Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_7.mp4" source=console
+default   [  90% ] 5 VUs  27.0s/30s
+running (0m27.0s), 5/5 VUs, 27 complete and 0 interrupted iterations
+time="2025-08-09T18:32:47Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+time="2025-08-09T18:32:46Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_5.mp4" source=console
+time="2025-08-09T18:32:46Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_2.mp4" source=console
+time="2025-08-09T18:32:46Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+default   [  87% ] 5 VUs  26.0s/30s
+running (0m26.0s), 5/5 VUs, 25 complete and 0 interrupted iterations
+time="2025-08-09T18:32:46Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:45Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_1: Status=200 | Duration=15.66ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:45Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_1.jpg" source=console
+time="2025-08-09T18:32:45Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+default   [  83% ] 5 VUs  25.0s/30s
+running (0m25.0s), 5/5 VUs, 23 complete and 0 interrupted iterations
+time="2025-08-09T18:32:45Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:45Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_5: Status=200 | Duration=2110.75ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:44Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_8: Status=200 | Duration=1915.65ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  80% ] 5 VUs  24.0s/30s
+running (0m24.0s), 5/5 VUs, 22 complete and 0 interrupted iterations
+time="2025-08-09T18:32:44Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_1: Status=200 | Duration=2421.09ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:43Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_8: Status=200 | Duration=15.34ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:43Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_8.jpg" source=console
+time="2025-08-09T18:32:43Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+default   [  77% ] 5 VUs  23.0s/30s
+running (0m23.0s), 5/5 VUs, 21 complete and 0 interrupted iterations
+time="2025-08-09T18:32:43Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_5.mp4" source=console
+time="2025-08-09T18:32:42Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_8.mp4" source=console
+default   [  73% ] 5 VUs  22.0s/30s
+running (0m22.0s), 5/5 VUs, 21 complete and 0 interrupted iterations
+time="2025-08-09T18:32:41Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_1.mp4" source=console
+time="2025-08-09T18:32:41Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:41Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+time="2025-08-09T18:32:41Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+default   [  70% ] 5 VUs  21.0s/30s
+running (0m21.0s), 5/5 VUs, 18 complete and 0 interrupted iterations
+time="2025-08-09T18:32:41Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_4: Status=200 | Duration=25.60ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:41Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_4.jpg" source=console
+time="2025-08-09T18:32:40Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+default   [  67% ] 5 VUs  20.0s/30s
+running (0m20.0s), 5/5 VUs, 17 complete and 0 interrupted iterations
+time="2025-08-09T18:32:39Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_4: Status=200 | Duration=5396.80ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  63% ] 5 VUs  19.0s/30s
+running (0m19.0s), 5/5 VUs, 17 complete and 0 interrupted iterations
+time="2025-08-09T18:32:39Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_1: Status=200 | Duration=4770.29ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:38Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_2: Status=200 | Duration=1301.72ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:38Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+default   [  60% ] 5 VUs  18.0s/30s
+running (0m18.0s), 5/5 VUs, 16 complete and 0 interrupted iterations
+time="2025-08-09T18:32:38Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_10: Status=200 | Duration=4155.42ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:37Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_2.mp4" source=console
+default   [  57% ] 5 VUs  17.0s/30s
+running (0m17.0s), 5/5 VUs, 16 complete and 0 interrupted iterations
+default   [  53% ] 5 VUs  16.0s/30s
+running (0m16.0s), 5/5 VUs, 16 complete and 0 interrupted iterations
+time="2025-08-09T18:32:36Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:36Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_1: Status=200 | Duration=476.95ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:35Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_1.mp4" source=console
+default   [  50% ] 5 VUs  15.0s/30s
+running (0m15.0s), 5/5 VUs, 15 complete and 0 interrupted iterations
+time="2025-08-09T18:32:34Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_6: Status=200 | Duration=30.82ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:34Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_6.jpg" source=console
+default   [  47% ] 5 VUs  14.0s/30s
+running (0m14.0s), 5/5 VUs, 15 complete and 0 interrupted iterations
+time="2025-08-09T18:32:34Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_1.mp4" source=console
+time="2025-08-09T18:32:34Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:34Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_4.mp4" source=console
+time="2025-08-09T18:32:34Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_10.mp4" source=console
+default   [  43% ] 5 VUs  13.0s/30s
+running (0m13.0s), 5/5 VUs, 14 complete and 0 interrupted iterations
+time="2025-08-09T18:32:33Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:33Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:32Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:32Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+default   [  40% ] 5 VUs  12.0s/30s
+running (0m12.0s), 5/5 VUs, 10 complete and 0 interrupted iterations
+time="2025-08-09T18:32:31Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_4: Status=200 | Duration=16.26ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:31Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_4.jpg" source=console
+default   [  37% ] 5 VUs  11.0s/30s
+running (0m11.0s), 5/5 VUs, 10 complete and 0 interrupted iterations
+time="2025-08-09T18:32:31Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_10: Status=200 | Duration=430.89ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:31Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_4: Status=200 | Duration=16.88ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:31Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_6: Status=200 | Duration=59.49ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:31Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_4.jpg" source=console
+time="2025-08-09T18:32:31Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_6.jpg" source=console
+time="2025-08-09T18:32:30Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_10.mp4" source=console
+default   [  33% ] 5 VUs  10.0s/30s
+running (0m10.0s), 5/5 VUs, 10 complete and 0 interrupted iterations
+time="2025-08-09T18:32:30Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_10: Status=200 | Duration=878.63ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:29Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:29Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+default   [  30% ] 5 VUs  09.0s/30s
+running (0m09.0s), 5/5 VUs, 8 complete and 0 interrupted iterations
+time="2025-08-09T18:32:29Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_10.mp4" source=console
+time="2025-08-09T18:32:29Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+time="2025-08-09T18:32:29Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+default   [  27% ] 5 VUs  08.0s/30s
+running (0m08.0s), 5/5 VUs, 6 complete and 0 interrupted iterations
+time="2025-08-09T18:32:27Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:27Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_1: Status=200 | Duration=1333.02ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  23% ] 5 VUs  07.0s/30s
+running (0m07.0s), 5/5 VUs, 5 complete and 0 interrupted iterations
+time="2025-08-09T18:32:27Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_2: Status=200 | Duration=550.45ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:26Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_5: Status=200 | Duration=14.39ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:26Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_5.jpg" source=console
+time="2025-08-09T18:32:26Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_2: Status=200 | Duration=29.76ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:26Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_2.jpg" source=console
+time="2025-08-09T18:32:26Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_2.mp4" source=console
+time="2025-08-09T18:32:26Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_2: Status=200 | Duration=937.57ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [  20% ] 5 VUs  06.0s/30s
+running (0m06.0s), 5/5 VUs, 5 complete and 0 interrupted iterations
+time="2025-08-09T18:32:26Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_1.mp4" source=console
+time="2025-08-09T18:32:25Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_2.mp4" source=console
+default   [  17% ] 5 VUs  05.0s/30s
+running (0m05.0s), 5/5 VUs, 5 complete and 0 interrupted iterations
+time="2025-08-09T18:32:25Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:25Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:24Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+time="2025-08-09T18:32:24Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+default   [  13% ] 5 VUs  04.0s/30s
+running (0m04.0s), 5/5 VUs, 1 complete and 0 interrupted iterations
+time="2025-08-09T18:32:24Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+default   [  10% ] 5 VUs  03.0s/30s
+running (0m03.0s), 5/5 VUs, 0 complete and 0 interrupted iterations
+time="2025-08-09T18:32:23Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_4: Status=200 | Duration=1658.05ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:23Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_5: Status=200 | Duration=1585.63ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:23Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_9: Status=200 | Duration=1405.24ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:22Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_7: Status=200 | Duration=15.63ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:22Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_7.jpg" source=console
+time="2025-08-09T18:32:22Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_4: Status=200 | Duration=693.40ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default   [   7% ] 5 VUs  02.0s/30s
+running (0m02.0s), 5/5 VUs, 0 complete and 0 interrupted iterations
+time="2025-08-09T18:32:21Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_9.mp4" source=console
+time="2025-08-09T18:32:21Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_4.mp4" source=console
+time="2025-08-09T18:32:21Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_5.mp4" source=console
+time="2025-08-09T18:32:21Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_4.mp4" source=console
+default   [   3% ] 5 VUs  01.0s/30s
+running (0m01.0s), 5/5 VUs, 0 complete and 0 interrupted iterations
+time="2025-08-09T18:32:20Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+time="2025-08-09T18:32:20Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:20Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:20Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:20Z" level=info msg="[asia-southeast1] Starting video browse test..." source=console
+time="2025-08-09T18:32:20Z" level=info msg="=====================================" source=console
+time="2025-08-09T18:32:20Z" level=info msg="Virtual users: 5" source=console
+time="2025-08-09T18:32:20Z" level=info msg="Test duration: 30s" source=console
+time="2025-08-09T18:32:20Z" level=info msg="CDN: https://cdn.sohryuu.me" source=console
+time="2025-08-09T18:32:20Z" level=info msg="Target app: https://web-server-577176926733.us-central1.run.app" source=console
+time="2025-08-09T18:32:20Z" level=info msg="Region: asia-southeast1" source=console
+time="2025-08-09T18:32:20Z" level=info msg="=== CDN Performance Test Starting ===" source=console
+              * default: 5 looping VUs for 30s (gracefulStop: 30s)
+     scenarios: (100.00%) 1 scenario, 5 max VUs, 1m0s max duration (incl. graceful stop):
+        output: -
+        script: /home/k6/load-test-ver2.js
+     execution: local
+ / __________ \  |_|\_\  \_____/ 
+  /          \   |   (  |  (‾)  |
+   /  \/    \    | |/ /  /   ‾‾\ 
+    /\  /  \     |\  __   /  /   
+         /\      Grafana   /‾‾/  
+Starting new instance. Reason: AUTOSCALING - Instance started due to configured scaling factors (e.g. CPU utilization, request throughput, etc.) or no existing capacity for current traffic.
+=== KEY PERFORMANCE METRICS SUMMARY ===
+
+Region: asia-east1
+default ↓ [ 100% ] 5 VUs  30s
+running (0m34.0s), 1/5 VUs, 34 complete and 0 interrupted iterations
+default ↓ [ 100% ] 5 VUs  30s
+running (0m33.0s), 3/5 VUs, 32 complete and 0 interrupted iterations
+default ↓ [ 100% ] 5 VUs  30s
+running (0m32.0s), 4/5 VUs, 31 complete and 0 interrupted iterations
+time="2025-08-09T18:29:34Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_3: Status=200 | Duration=1800.32ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:34Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_2: Status=200 | Duration=64.33ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:34Z" level=info msg="[asia-east1] Requesting image: https://cdn.sohryuu.me/static/images/image_2.jpg" source=console
+time="2025-08-09T18:29:33Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_8: Status=200 | Duration=1494.85ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+default ↓ [ 100% ] 5 VUs  30s
+running (0m31.0s), 5/5 VUs, 30 complete and 0 interrupted iterations
+time="2025-08-09T18:29:33Z" level=info msg="[asia-east1] VIDEO SUCCESS - video_10: Status=200 | Duration=1546.14ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:29:32Z" level=info msg="[asia-east1] Requesting video: https://cdn.sohryuu.me/static/videos/video_3.mp4" source=console
+time="2025-08-09T18:29:32Z" level=info msg="[asia-east1] IMAGE SUCCESS - image_2: Status=200 | Duration=63.99ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+
+Region: asia-northeast1
+default ↓ [ 100% ] 5 VUs  30s
+running (0m34.0s), 1/5 VUs, 31 complete and 0 interrupted iterations
+default ↓ [ 100% ] 5 VUs  30s
+running (0m33.0s), 2/5 VUs, 30 complete and 0 interrupted iterations
+default ↓ [ 100% ] 5 VUs  30s
+running (0m32.0s), 4/5 VUs, 28 complete and 0 interrupted iterations
+time="2025-08-09T18:30:32Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_1: Status=200 | Duration=1927.44ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:32Z" level=info msg="[asia-northeast1] IMAGE SUCCESS - image_8: Status=200 | Duration=84.80ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:30:31Z" level=info msg="[asia-northeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_8.jpg" source=console
+default ↓ [ 100% ] 5 VUs  30s
+running (0m31.0s), 4/5 VUs, 28 complete and 0 interrupted iterations
+default   [ 100% ] 5 VUs  30.0s/30s
+running (0m30.0s), 5/5 VUs, 27 complete and 0 interrupted iterations
+time="2025-08-09T18:30:30Z" level=info msg="[asia-northeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_1.mp4" source=console
+time="2025-08-09T18:30:30Z" level=info msg="[asia-northeast1] VIDEO SUCCESS - video_7: Status=200 | Duration=2897.76ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+
+Region: asia-southeast1
+default ↓ [ 100% ] 5 VUs  30s
+running (0m34.0s), 1/5 VUs, 33 complete and 0 interrupted iterations
+default ↓ [ 100% ] 5 VUs  30s
+running (0m33.0s), 2/5 VUs, 32 complete and 0 interrupted iterations
+time="2025-08-09T18:32:52Z" level=info msg="[asia-southeast1] VIDEO SUCCESS - video_3: Status=200 | Duration=1248.20ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:52Z" level=info msg="[asia-southeast1] IMAGE SUCCESS - image_9: Status=200 | Duration=16.83ms | Cache=HIT | Size=unknown bytes | Server=unknown" source=console
+time="2025-08-09T18:32:52Z" level=info msg="[asia-southeast1] Requesting image: https://cdn.sohryuu.me/static/images/image_9.jpg" source=console
+default ↓ [ 100% ] 5 VUs  30s
+running (0m32.0s), 2/5 VUs, 32 complete and 0 interrupted iterations
+time="2025-08-09T18:32:51Z" level=info msg="[asia-southeast1] Requesting video: https://cdn.sohryuu.me/static/videos/video_3.mp4" source=console
+default ↓ [ 100% ] 5 VUs  30s
+running (0m31.0s), 2/5 VUs, 32 complete and 0 interrupted iterations
+default   [ 100% ] 5 VUs  30.0s/30s
+running (0m30.0s), 5/5 VUs, 29 complete and 0 interrupted iterations
+time="2025-08-09T18:32:50Z" level=info msg="[asia-southeast1] Starting image browse test..." source=console
+
