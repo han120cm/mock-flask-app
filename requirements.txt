@@ -14,3 +14,13 @@ requests
 psycopg2-binary
 cloud-sql-python-connector[pg8000]
 python-dotenv
+# ML and experiment dependencies
+pandas>=1.5.0
+numpy>=1.23.0
+scikit-learn>=1.1.0
+joblib>=1.2.0
+lightgbm>=3.3.0
+matplotlib>=3.5.0
+seaborn>=0.12.0
+scipy>=1.9.0
+paramiko>=2.11.0
