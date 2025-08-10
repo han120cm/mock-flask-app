@@ -19,5 +19,5 @@ fi
 
 echo "Deleting cache at /var/cache/nginx/media/ on $TARGET ($HOST)..."
 
-ssh -i "$KEY" "$USER@$HOST" "sudo rm -rf /var/cache/nginx/media/*" && \
+ssh -o IdentitiesOnly=yes -i "$KEY" "$USER@$HOST" "sudo rm -rf /var/cache/nginx/media/*" && \
 echo "Cache cleared on $TARGET ($HOST)"

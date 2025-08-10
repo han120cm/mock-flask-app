@@ -1,34 +1,33 @@
 #!/bin/bash
 
 SCRIPT="generate_cache_index.py"
-REMOTE_SCRIPT_PATH="/home/user/$SCRIPT"
+REMOTE_SCRIPT_PATH="/home/hnfxrt/$SCRIPT"
 REMOTE_OUTPUT="cache_index.json"
-LOCAL_SAVE_DIR="local/save/dir"
-KEY="/dir/to/priv/key"
-USER="USER"
-
-# change to server actual ip"
-declare -A HOSTS
-HOSTS[sea]="1.1.1.1" 
-HOSTS[eu]="1.1.1.1"
-HOSTS[us]="1.1.1.1"
+LOCAL_SAVE_DIR="."
+KEY="/Users/feb/Documents/GitHub/mock-flask-app/id_rsa"
+USER="hnfxrt"
 
 TARGET=$1
+HOST=""
 
-if [[ -z "${HOSTS[$TARGET]}" ]]; then
-  echo "Usage: $0 [sea|eu]"
+if [[ "$TARGET" == "sea" ]]; then
+  HOST="34.128.85.243"
+elif [[ "$TARGET" == "eu" ]]; then
+  HOST="35.197.236.92"
+elif [[ "$TARGET" == "us" ]]; then
+  HOST="34.23.29.132"
+else
+  echo "Usage: $0 [sea|eu|us]"
   exit 1
 fi
 
-HOST=${HOSTS[$TARGET]}
-
 echo " Copying $SCRIPT to $TARGET ($HOST)..."
-scp -i $KEY "$SCRIPT" "$USER@$HOST:$REMOTE_SCRIPT_PATH"
+scp -o IdentitiesOnly=yes -i $KEY "ml/$SCRIPT" "$USER@$HOST:$REMOTE_SCRIPT_PATH"
 
 echo " Running script on $TARGET ($HOST)..."
-ssh -i $KEY "$USER@$HOST" "sudo python3 $REMOTE_SCRIPT_PATH"
+ssh -o IdentitiesOnly=yes -i $KEY "$USER@$HOST" "sudo python3 $REMOTE_SCRIPT_PATH"
 
 echo "Downloading $REMOTE_OUTPUT from $TARGET ($HOST)..."
-scp -i $KEY "$USER@$HOST:/home/hnfxrt/$REMOTE_OUTPUT" "$LOCAL_SAVE_DIR/cache_index_lru_${TARGET}.json"
+scp -o IdentitiesOnly=yes -i $KEY "$USER@$HOST:/home/hnfxrt/$REMOTE_OUTPUT" "$LOCAL_SAVE_DIR/cache_index_lru_${TARGET}.json"
 
-echo " Saved to $LOCAL_SAVE_DIR/cache_index_${TARGET}.json"
+echo " Saved to $LOCAL_SAVE_DIR/cache_index_lru_${TARGET}.json"
