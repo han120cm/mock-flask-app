@@ -1,22 +1,21 @@
 #!/bin/bash
 
-KEY="dir/to/priv/key"
-USER="USER"
-
-# change to server actual ip"
-declare -A HOSTS
-HOSTS[sea]="1.1.1.1" 
-HOSTS[eu]="1.1.1.1"
-HOSTS[us]="1.1.1.1"
+KEY="/Users/feb/Documents/GitHub/mock-flask-app/id_rsa"
+USER="hnfxrt"
 
 TARGET=$1
+HOST=""
 
-if [[ -z "${HOSTS[$TARGET]}" ]]; then
+if [[ "$TARGET" == "sea" ]]; then
+  HOST="34.128.85.243"
+elif [[ "$TARGET" == "eu" ]]; then
+  HOST="35.197.236.92"
+elif [[ "$TARGET" == "us" ]]; then
+  HOST="34.23.29.132"
+else
   echo "Usage: $0 [sea|eu|us]"
   exit 1
 fi
-
-HOST=${HOSTS[$TARGET]}
 
 echo "Deleting cache at /var/cache/nginx/media/ on $TARGET ($HOST)..."
 

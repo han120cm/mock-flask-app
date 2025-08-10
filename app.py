@@ -492,8 +492,8 @@ def dashboard_page():
         logger.error(f"Error in dashboard_page route: {e}")
         return "Internal server error", 500
 
-@app.route("/ab-test")
-def ab_test_page():
+@app.route("/test")
+def test_page():
     """Render the A/B test page"""
     try:
         response = make_response(render_template('ab_test.html'))
