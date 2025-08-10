@@ -13,179 +13,87 @@
     
     <div class="section">
         <h2>🧪 Run A/B Test</h2>
-        <form id="ab-test-form">
-            <div class="form-group">
-                <label for="cache_size">Cache Size (MB):</label>
-                <input type="number" id="cache_size" name="cache_size" value="50" min="10" max="1000" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="iterations">Number of Iterations:</label>
-                <input type="number" id="iterations" name="iterations" value="3" min="1" max="20" class="form-control">
-            </div>
-            <button type="submit" id="run-test-btn" class="action-btn action-btn-upload">Run A/B Test</button>
-        </form>
+        <p>Click a button to start the A/B test for a specific region.</p>
+        <div class="region-buttons">
+            <button class="action-btn" onclick="runTest('sea')">Run Test on SEA</button>
+            <button class="action-btn" onclick="runTest('eu')">Run Test on EU</button>
+            <button class="action-btn" onclick="runTest('us')">Run Test on US</button>
+        </div>
     </div>
     
     <div class="section">
-        <h2>📊 Results</h2>
-        <div id="test-results">
-            <p>Run a test to see results here.</p>
-        </div>
+        <h2>📊 Test Status & Logs</h2>
+        <pre id="test-logs">No test running.</pre>
     </div>
 </div>
 
 <script>
-    document.getElementById('ab-test-form').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const cacheSize = document.getElementById('cache_size').value;
-        const iterations = document.getElementById('iterations').value;
-        const runButton = document.getElementById('run-test-btn');
-        const resultsDiv = document.getElementById('test-results');
-        
-        // Disable button and show loading
-        runButton.disabled = true;
-        runButton.textContent = 'Running Test...';
-        resultsDiv.innerHTML = '<p>Running A/B test... This may take a moment.</p>';
-        
+    let intervalId;
+
+    async function runTest(region) {
+        const logContainer = document.getElementById('test-logs');
+        logContainer.textContent = `Starting A/B test for ${region.toUpperCase()}...`;
+
+        // Clear any previous polling
+        if (intervalId) {
+            clearInterval(intervalId);
+        }
+
         try {
-            const response = await fetch('/api/run-ab-test', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    cache_size_mb: parseInt(cacheSize),
-                    num_iterations: parseInt(iterations)
-                })
-            });
-            
+            const response = await fetch(`/test/run/${region}`);
             const data = await response.json();
-            
+
             if (data.status === 'success') {
-                // Display results
-                let html = `
-                <h3>Summary Statistics</h3>
-                <table class="results-table">
-                    <thead>
-                        <tr>
-                            <th>Policy</th>
-                            <th>Avg Hit Ratio</th>
-                            <th>Avg Byte Hit Ratio</th>
-                            <th>Items Evicted</th>
-                            <th>Bytes Evicted (MB)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                `;
-                
-                for (const [policy, stats] of Object.entries(data.summary)) {
-                    html += `
-                    <tr>
-                        <td><strong>${policy}</strong></td>
-                        <td>${stats.hit_ratio_mean ? stats.hit_ratio_mean.toFixed(4) : 'N/A'}</td>
-                        <td>${stats.byte_hit_ratio_mean ? stats.byte_hit_ratio_mean.toFixed(4) : 'N/A'}</td>
-                        <td>${stats.items_evicted_mean ? stats.items_evicted_mean.toFixed(2) : 'N/A'}</td>
-                        <td>${stats.bytes_evicted_mb_mean ? stats.bytes_evicted_mb_mean.toFixed(2) : 'N/A'}</td>
-                    </tr>
-                    `;
-                }
-                
-                html += `
-                    </tbody>
-                </table>
-                
-                <h3>Detailed Results</h3>
-                <p>Total iterations: ${iterations}</p>
-                <p>Cache size: ${cacheSize} MB</p>
-                <p><strong>Using real CDN data</strong></p>
-                `;
-                
-                resultsDiv.innerHTML = html;
+                logContainer.textContent = `Test for ${region.toUpperCase()} started successfully. Polling for logs...`;
+                // Start polling for status
+                intervalId = setInterval(() => fetchStatus(), 2000);
             } else {
-                if (data.error && data.error.includes('Cannot connect to CDN')) {
-                    resultsDiv.innerHTML = `
-                        <p class="error">Error: Cannot connect to CDN.</p>
-                        <p class="error-details">Please check:
-                        <ul>
-                            <li>CDN host IP address is correct</li>
-                            <li>SSH username is correct</li>
-                            <li>Private key file exists and has correct permissions</li>
-                            <li>SSH key is not password-protected (or is unlocked)</li>
-                            <li>Network connectivity to CDN node</li>
-                        </ul>
-                        </p>
-                    `;
-                } else {
-                    resultsDiv.innerHTML = `<p class="error">Error: ${data.error}</p>`;
-                }
+                logContainer.textContent = `Error starting test: ${data.message}`;
             }
         } catch (error) {
-            resultsDiv.innerHTML = `<p class="error">Error running test: ${error.message}</p>`;
-        } finally {
-            // Re-enable button
-            runButton.disabled = false;
-            runButton.textContent = 'Run A/B Test';
+            logContainer.textContent = `Error starting test: ${error.message}`;
         }
-    });
+    }
+
+    async function fetchStatus() {
+        const logContainer = document.getElementById('test-logs');
+        try {
+            const response = await fetch('/test/status');
+            const data = await response.json();
+
+            if (data.status === 'success' || data.status === 'pending') {
+                logContainer.textContent = data.log;
+                // Check if the test is finished
+                if (data.log.includes("All tests completed.") || data.log.includes("failed")) {
+                    clearInterval(intervalId);
+                }
+            } else {
+                logContainer.textContent = `Error fetching status: ${data.message}`;
+                clearInterval(intervalId);
+            }
+        } catch (error) {
+            logContainer.textContent = `Error fetching status: ${error.message}`;
+            clearInterval(intervalId);
+        }
+    }
 </script>
 
 <style>
-.results-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+.region-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
-.results-table th,
-.results-table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-}
-
-.results-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-}
-
-.results-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.results-table tr:hover {
+#test-logs {
     background-color: #f5f5f5;
-}
-
-.error {
-    color: #e74c3c;
-    font-weight: bold;
-}
-
-.error-details {
-    color: #7f8c8d;
-    margin-top: 10px;
-}
-
-.error-details ul {
-    margin: 10px 0 10px 20px;
-    padding: 0;
-}
-
-.error-details li {
-    margin: 5px 0;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-control {
-    width: 100%;
-    padding: 10px;
     border: 1px solid #ddd;
+    padding: 15px;
     border-radius: 4px;
-    box-sizing: border-box;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 500px;
+    overflow-y: auto;
 }
 </style>
 {% endblock %}

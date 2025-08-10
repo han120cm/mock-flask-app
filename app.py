@@ -10,6 +10,7 @@ import logging
 from dotenv import load_dotenv
 from sqlalchemy import case
 import pandas as pd
+import subprocess
 
 # Load environment variables from .env file
 load_dotenv()
@@ -815,6 +816,34 @@ def run_ab_test_api():
         if "Cannot connect to CDN" in error_message:
             return jsonify({'error': 'Cannot connect to CDN - Please check connection settings and SSH key configuration'}), 500
         return jsonify({'error': error_message}), 500
+
+
+@app.route("/test/run/<region>")
+def run_test(region):
+    """Triggers the A/B test script in the background."""
+    if region not in ['sea', 'eu', 'us']:
+        return jsonify({"status": "error", "message": "Invalid region"}), 400
+
+    try:
+        # Open a log file to capture the output
+        log_file = open("ab_test.log", "w")
+        # Start the script in a new process
+        subprocess.Popen(["python3", "run_ab_test.py", region], stdout=log_file, stderr=subprocess.STDOUT)
+        return jsonify({"status": "success", "message": f"A/B test started for {region} region. See ab_test.log for progress."})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/test/status")
+def test_status():
+    """Returns the content of the A/B test log file."""
+    try:
+        with open("ab_test.log", "r") as f:
+            content = f.read()
+        return jsonify({"status": "success", "log": content})
+    except FileNotFoundError:
+        return jsonify({"status": "pending", "log": "No test has been run yet."})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 if __name__ == "__main__":
