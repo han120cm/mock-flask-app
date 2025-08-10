@@ -756,66 +756,7 @@ def generate_test_data():
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-@app.route("/api/run-ab-test", methods=['POST'])
-def run_ab_test_api():
-    """API endpoint to run cache eviction policy A/B test with real CDN data"""
-    try:
-        from cache_policies.ab_tester import ABTester
-        import json
-        import os
-        
-        # Get parameters from request
-        data = request.get_json()
-        cache_size_mb = data.get('cache_size_mb', 50)
-        num_iterations = data.get('num_iterations', 3)
-        
-        # Initialize tester with CDN connection settings from environment variables
-        cdn_host = os.getenv('CDN_HOST')
-        cdn_user = os.getenv('CDN_USER')
-        private_key_path = os.getenv('PRIVATE_KEY_PATH')
-        
-        tester = ABTester(
-            cache_size_mb=cache_size_mb,
-            cdn_host=cdn_host,
-            cdn_user=cdn_user,
-            private_key_path=private_key_path
-        )
-        
-        # Run A/B test with real data requirement
-        results = tester.run_ab_test(num_iterations=num_iterations, require_real_data=True)
-        
-        # Get summary statistics
-        summary = tester.get_summary_statistics()
-        
-        # Convert summary to dict for JSON serialization
-        summary_dict = {}
-        if not summary.empty:
-            for policy in summary.index:
-                summary_dict[policy] = {}
-                for col in summary.columns:
-                    value = summary.loc[policy, col]
-                    # Handle NaN values for JSON serialization
-                    if pd.isna(value):
-                        summary_dict[policy][col] = None
-                    else:
-                        # Convert numpy types to Python native types
-                        if hasattr(value, 'item'):
-                            summary_dict[policy][col] = value.item()
-                        else:
-                            summary_dict[policy][col] = value
-        
-        return jsonify({
-            'status': 'success',
-            'results': results,
-            'summary': summary_dict,
-            'message': f'Completed A/B test with {num_iterations} iterations using real CDN data'
-        })
-    except Exception as e:
-        logger.error(f"Error in run_ab_test_api route: {e}")
-        error_message = str(e)
-        if "Cannot connect to CDN" in error_message:
-            return jsonify({'error': 'Cannot connect to CDN - Please check connection settings and SSH key configuration'}), 500
-        return jsonify({'error': error_message}), 500
+
 
 
 @app.route("/test/run/<region>")
