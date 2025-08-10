@@ -1,20 +1,36 @@
 #!/bin/bash
 
-WEB_BASE="origin-server.com"
-CDN_BASE="cdn-server.com"
+WEB_BASE="https://web-server-577176926733.us-central1.run.app"
+CDN_BASE="https://cdn.sohryuu.me"
 LOG_FILE="cdn-simulation/cdn_trend_simulation_zipf.log"
 TOTAL_REQUESTS=100  
 ZIPF_PARAMETER=1.2  
 
-declare -A CONTENT_CATEGORIES=(
-    ["images/trending"]=10    
-    ["images/popular"]=8      
-    ["images/general"]=5      
-    ["images/rare"]=1         
-    ["videos/tutorials"]=7    
-    ["videos/documentaries"]=4
-    ["videos/archived"]=1     
+# Define content categories and their base weights
+# Format: category:weight
+CONTENT_CATEGORIES=(
+    "images/trending:10"
+    "images/popular:8"
+    "images/general:5"
+    "images/rare:1"
+    "videos/tutorials:7"
+    "videos/documentaries:4"
+    "videos/archived:1"
 )
+
+# Function to get weight for a category
+get_category_weight() {
+    local search_category="$1"
+    for item in "${CONTENT_CATEGORIES[@]}"; do
+        local category="${item%%:*}"
+        local weight="${item##*:}"
+        if [[ "$category" == "$search_category" ]]; then
+            echo "$weight"
+            return
+        fi
+    done
+    echo "1"  # Default weight
+}
 
 generate_content_catalog() {
     declare -g -a ALL_CONTENT_URLS
@@ -24,8 +40,9 @@ generate_content_catalog() {
     echo "Generating content catalog with Zipf distribution..."
     
     # Generate web server content (category endpoints only)
-    for category in "${!CONTENT_CATEGORIES[@]}"; do
-        local base_weight=${CONTENT_CATEGORIES[$category]}
+    for item in "${CONTENT_CATEGORIES[@]}"; do
+        local category="${item%%:*}"
+        local base_weight="${item##*:}"
         local url="$WEB_BASE/$category"
         
         ALL_CONTENT_URLS[$index]=$url
@@ -41,7 +58,12 @@ generate_content_catalog() {
         ALL_CONTENT_URLS[$index]=$url
         
         # Higher numbered images are less popular (Zipf distribution)
-        local item_weight=$(echo "scale=6; 6 / ($i ^ $ZIPF_PARAMETER)" | bc -l)
+        # Using integer exponent to avoid bc issues
+        if [[ $i -eq 1 ]]; then
+            local item_weight=6.0
+        else
+            local item_weight=$(echo "scale=6; 6 / $i" | bc -l)
+        fi
         CONTENT_WEIGHTS[$index]=$item_weight
         
         ((index++))
@@ -53,7 +75,12 @@ generate_content_catalog() {
         ALL_CONTENT_URLS[$index]=$url
         
         # Higher numbered videos are less popular (Zipf distribution)
-        local item_weight=$(echo "scale=6; 5 / ($i ^ $ZIPF_PARAMETER)" | bc -l)
+        # Using integer exponent to avoid bc issues
+        if [[ $i -eq 1 ]]; then
+            local item_weight=5.0
+        else
+            local item_weight=$(echo "scale=6; 5 / $i" | bc -l)
+        fi
         CONTENT_WEIGHTS[$index]=$item_weight
         
         ((index++))
@@ -276,7 +303,7 @@ main() {
     echo "  - Total content items: ~205 (7 web categories + 198 CDN files)"  
     echo "  - Zipf parameter: $ZIPF_PARAMETER"
     echo "  - Base requests per day: $TOTAL_REQUESTS"
-    echo "  - Categories: ${!CONTENT_CATEGORIES[*]}"
+    echo "  - Categories: ${CONTENT_CATEGORIES[*]%%:*}"
     
     # Check network connectivity
     echo "Testing network connectivity..."

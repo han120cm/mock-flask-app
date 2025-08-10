@@ -1,13 +1,13 @@
 #!/bin/bash
 
-KEY="dir/to/priv/key"
-USER="USER"
+KEY="/Users/feb/Documents/GitHub/mock-flask-app/id_rsa"
+USER="hnfxrt"
 
 # change to server actual ip"
 declare -A HOSTS
-HOSTS[sea]="1.1.1.1" 
-HOSTS[eu]="1.1.1.1"
-HOSTS[us]="1.1.1.1"
+HOSTS[sea]="34.128.85.243" 
+HOSTS[eu]="35.197.236.92"
+HOSTS[us]="34.23.29.132"
 
 for TARGET in "${!HOSTS[@]}"; do
   HOST=${HOSTS[$TARGET]}

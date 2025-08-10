@@ -1,0 +1,610 @@
+CDN Cache Eviction Policy A/B Tester
+This script runs tests against a live CDN following a specific flow:
+1. Delete cache -> 2. Simulate traffic -> 3. Evict -> 4. Simulate traffic
+==================================================
+
+==================== Starting test for LRU policy in SEA region ====================
+--- Running: Delete cache ---
+Deleting cache at /var/cache/nginx/media/ on sea (34.128.85.243) using Python script...
+Cache cleared on 34.128.85.243
+
+--- Delete cache completed successfully ---
+--- Running: Simulate traffic (pre-eviction)нка ---
+CDN Traffic Simulation with Zipf Distribution
+All dependencies satisfied
+Configuration validated
+Starting CDN Traffic Simulation
+Parameters:
+  - Total content items: ~205 (7 web categories + 198 CDN files)
+  - Zipf parameter: 1.2
+  - Base requests per day: 100
+  - Categories: images/trending images/popular images/general images/rare videos/tutorials videos/documentaries videos/archived
+Testing network connectivity...
+Setting up content catalog...
+Generating content catalog with Zipf distribution...
+Generated 205 total URLs (7 web categories + 198 CDN files)
+Calculating Zipf cumulative distribution...
+Distribution calculated for 205 items
+Setup complete. Content catalog has 205 URLs
+
+ Starting 5-day simulation...
+=== Day 1/5 ===
+Day 1: Simulating realistic traffic patterns
+Time: 21:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 1 completed: 100 requests generated
+Day 1 completed. Elapsed: 113s, Estimated remaining: 452s
+End of day 1, brief pause...
+=== Day 2/5 ===
+Day 2: Simulating realistic traffic patterns
+Time: 21:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 2 completed: 100 requests generated
+Day 2 completed. Elapsed: 203s, Estimated remaining: 303s
+End of day 2, brief pause...
+=== Day 3/5 ===
+Day 3: Simulating realistic traffic patterns
+Time: 21:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 3 completed: 100 requests generated
+Day 3 completed. Elapsed: 297s, Estimated remaining: 198s
+End of day 3, brief pause...
+=== Day 4/5 ===
+Day 4: Simulating realistic traffic patterns
+Time: 21:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 4 completed: 100 requests generated
+Day 4 completed. Elapsed: 386s, Estimated remaining: 96s
+End of day 4, brief pause...
+=== Day 5/5 ===
+Day 5: Simulating realistic traffic patterns
+Time: 21:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 5 completed: 100 requests generated
+Day 5 completed. Elapsed: 492s, Estimated remaining: 0s
+All 5 days completed in 492 seconds
+
+ Generating analysis...
+Analyzing traffic patterns...
+Analysis complete! Check traffic_analysis.txt for detailed results.
+
+ Quick Summary:
+  Total Requests:      500
+  Success Rate: 34.6%
+  Most Popular: https://web-server-577176926733.us-central1.run.app/images/trending (59 requests)
+
+ Simulation Complete!
+Generated files:
+cdn-simulation/cdn_trend_simulation_zipf.log - Complete request logs (     511 lines)
+traffic_analysis.txt - Traffic pattern analysis
+debug_top_content.log - Top content rankings
+
+ Zipf Distribution Validation:
+  • Total requests generated:      500
+  • Most popular URL: https://web-server-577176926733.us-central1.run.app/images/trending (59 requests)
+  • This demonstrates proper Zipf distribution - few items get most traffic!
+
+--- Simulate traffic (pre-eviction)нка completed successfully ---
+--- Running: Evict using LRU ---
+
+--- Evict using LRU completed successfully ---
+--- Running: Simulate traffic (post-eviction) ---
+CDN Traffic Simulation with Zipf Distribution
+All dependencies satisfied
+Configuration validated
+Starting CDN Traffic Simulation
+Parameters:
+  - Total content items: ~205 (7 web categories + 198 CDN files)
+  - Zipf parameter: 1.2
+  - Base requests per day: 100
+  - Categories: images/trending images/popular images/general images/rare videos/tutorials videos/documentaries videos/archived
+Testing network connectivity...
+Setting up content catalog...
+Generating content catalog with Zipf distribution...
+Generated 205 total URLs (7 web categories + 198 CDN files)
+Calculating Zipf cumulative distribution...
+Distribution calculated for 205 items
+Setup complete. Content catalog has 205 URLs
+
+ Starting 5-day simulation...
+=== Day 1/5 ===
+Day 1: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 1 completed: 100 requests generated
+Day 1 completed. Elapsed: 93s, Estimated remaining: 372s
+End of day 1, brief pause...
+=== Day 2/5 ===
+Day 2: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 2 completed: 100 requests generated
+Day 2 completed. Elapsed: 165s, Estimated remaining: 246s
+End of day 2, brief pause...
+=== Day 3/5 ===
+Day 3: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 3 completed: 100 requests generated
+Day 3 completed. Elapsed: 251s, Estimated remaining: 166s
+End of day 3, brief pause...
+=== Day 4/5 ===
+Day 4: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 4 completed: 100 requests generated
+Day 4 completed. Elapsed: 352s, Estimated remaining: 88s
+End of day 4, brief pause...
+=== Day 5/5 ===
+Day 5: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 5 completed: 100 requests generated
+Day 5 completed. Elapsed: 443s, Estimated remaining: 0s
+All 5 days completed in 443 seconds
+
+ Generating analysis...
+Analyzing traffic patterns...
+Analysis complete! Check traffic_analysis.txt for detailed results.
+
+ Quick Summary:
+  Total Requests:      500
+  Success Rate: 37.2%
+  Most Popular: https://web-server-577176926733.us-central1.run.app/images/trending (68 requests)
+
+ Simulation Complete!
+Generated files:
+cdn-simulation/cdn_trend_simulation_zipf.log - Complete request logs (     511 lines)
+traffic_analysis.txt - Traffic pattern analysis
+debug_top_content.log - Top content rankings
+
+ Zipf Distribution Validation:
+  • Total requests generated:      500
+  • Most popular URL: https://web-server-577176926733.us-central1.run.app/images/trending (68 requests)
+  • This demonstrates proper Zipf distribution - few items get most traffic!
+
+--- Simulate traffic (post-eviction) completed successfully ---
+--- Test for LRU completed successfully ---
+
+==================== Starting test for LFU policy in SEA region ====================
+--- Running: Delete cache ---
+Deleting cache at /var/cache/nginx/media/ on sea (34.128.85.243) using Python script...
+Cache cleared on 34.128.85.243
+
+--- Delete cache completed successfully ---
+--- Running: Simulate traffic (pre-eviction)нка ---
+CDN Traffic Simulation with Zipf Distribution
+All dependencies satisfied
+Configuration validated
+Starting CDN Traffic Simulation
+Parameters:
+  - Total content items: ~205 (7 web categories + 198 CDN files)
+  - Zipf parameter: 1.2
+  - Base requests per day: 100
+  - Categories: images/trending images/popular images/general images/rare videos/tutorials videos/documentaries videos/archived
+Testing network connectivity...
+Setting up content catalog...
+Generating content catalog with Zipf distribution...
+Generated 205 total URLs (7 web categories + 198 CDN files)
+Calculating Zipf cumulative distribution...
+Distribution calculated for 205 items
+Setup complete. Content catalog has 205 URLs
+
+ Starting 5-day simulation...
+=== Day 1/5 ===
+Day 1: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 1 completed: 100 requests generated
+Day 1 completed. Elapsed: 97s, Estimated remaining: 388s
+End of day 1, brief pause...
+=== Day 2/5 ===
+Day 2: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 2 completed: 100 requests generated
+Day 2 completed. Elapsed: 186s, Estimated remaining: 279s
+End of day 2, brief pause...
+=== Day 3/5 ===
+Day 3: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 3 completed: 100 requests generated
+Day 3 completed. Elapsed: 289s, Estimated remaining: 192s
+End of day 3, brief pause...
+=== Day 4/5 ===
+Day 4: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 4 completed: 100 requests generated
+Day 4 completed. Elapsed: 391s, Estimated remaining: 97s
+End of day 4, brief pause...
+=== Day 5/5 ===
+Day 5: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 5 completed: 100 requests generated
+Day 5 completed. Elapsed: 486s, Estimated remaining: 0s
+All 5 days completed in 486 seconds
+
+ Generating analysis...
+Analyzing traffic patterns...
+Analysis complete! Check traffic_analysis.txt for detailed results.
+
+ Quick Summary:
+  Total Requests:      500
+  Success Rate: 39.0%
+  Most Popular: https://web-server-577176926733.us-central1.run.app/videos/tutorials (54 requests)
+
+ Simulation Complete!
+Generated files:
+cdn-simulation/cdn_trend_simulation_zipf.log - Complete request logs (     511 lines)
+traffic_analysis.txt - Traffic pattern analysis
+debug_top_content.log - Top content rankings
+
+ Zipf Distribution Validation:
+  • Total requests generated:      500
+  • Most popular URL: https://web-server-577176926733.us-central1.run.app/videos/tutorials (54 requests)
+  • This demonstrates proper Zipf distribution - few items get most traffic!
+
+--- Simulate traffic (pre-eviction)нка completed successfully ---
+--- Running: Evict using LFU ---
+Starting CDN Cache Eviction with LFU
+Region: sea
+Host: 34.128.85.243
+Strategy: Least Frequently Used (LFU)
+Syncing cache index from remote with pull_index.sh sea ...
+Error in LFU eviction process: [Errno 2] No such file or directory: '/home/hnfxrt/ml-vm/lfu/./pull_index_lfu.sh'
+
+--- Evict using LFU completed successfully ---
+--- Running: Simulate traffic (post-eviction) ---
+CDN Traffic Simulation with Zipf Distribution
+All dependencies satisfied
+Configuration validated
+Starting CDN Traffic Simulation
+Parameters:
+  - Total content items: ~205 (7 web categories + 198 CDN files)
+  - Zipf parameter: 1.2
+  - Base requests per day: 100
+  - Categories: images/trending images/popular images/general images/rare videos/tutorials videos/documentaries videos/archived
+Testing network connectivity...
+Setting up content catalog...
+Generating content catalog with Zipf distribution...
+Generated 205 total URLs (7 web categories + 198 CDN files)
+Calculating Zipf cumulative distribution...
+Distribution calculated for 205 items
+Setup complete. Content catalog has 205 URLs
+
+ Starting 5-day simulation...
+=== Day 1/5 ===
+Day 1: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 1 completed: 100 requests generated
+Day 1 completed. Elapsed: 83s, Estimated remaining: 332s
+End of day 1, brief pause...
+=== Day 2/5 ===
+Day 2: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 2 completed: 100 requests generated
+Day 2 completed. Elapsed: 180s, Estimated remaining: 270s
+End of day 2, brief pause...
+=== Day 3/5 ===
+Day 3: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 3 completed: 100 requests generated
+Day 3 completed. Elapsed: 266s, Estimated remaining: 176s
+End of day 3, brief pause...
+=== Day 4/5 ===
+Day 4: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 4 completed: 100 requests generated
+Day 4 completed. Elapsed: 341s, Estimated remaining: 85s
+End of day 4, brief pause...
+=== Day 5/5 ===
+Day 5: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 5 completed: 100 requests generated
+Day 5 completed. Elapsed: 413s, Estimated remaining: 0s
+All 5 days completed in 413 seconds
+
+ Generating analysis...
+Analyzing traffic patterns...
+Analysis complete! Check traffic_analysis.txt for detailed results.
+
+ Quick Summary:
+  Total Requests:      500
+  Success Rate: 34.6%
+  Most Popular: https://web-server-577176926733.us-central1.run.app/images/trending (51 requests)
+
+ Simulation Complete!
+Generated files:
+cdn-simulation/cdn_trend_simulation_zipf.log - Complete request logs (     511 lines)
+traffic_analysis.txt - Traffic pattern analysis
+debug_top_content.log - Top content rankings
+
+ Zipf Distribution Validation:
+  • Total requests generated:      500
+  • Most popular URL: https://web-server-577176926733.us-central1.run.app/images/trending (51 requests)
+  • This demonstrates proper Zipf distribution - few items get most traffic!
+
+--- Simulate traffic (post-eviction) completed successfully ---
+--- Test for LFU completed successfully ---
+
+==================== Starting test for LRB policy in SEA region ====================
+--- Running: Delete cache ---
+Deleting cache at /var/cache/nginx/media/ on sea (34.128.85.243) using Python script...
+Cache cleared on 34.128.85.243
+
+--- Delete cache completed successfully ---
+--- Running: Simulate traffic (pre-eviction)нка ---
+CDN Traffic Simulation with Zipf Distribution
+All dependencies satisfied
+Configuration validated
+Starting CDN Traffic Simulation
+Parameters:
+  - Total content items: ~205 (7 web categories + 198 CDN files)
+  - Zipf parameter: 1.2
+  - Base requests per day: 100
+  - Categories: images/trending images/popular images/general images/rare videos/tutorials videos/documentaries videos/archived
+Testing network connectivity...
+Setting up content catalog...
+Generating content catalog with Zipf distribution...
+Generated 205 total URLs (7 web categories + 198 CDN files)
+Calculating Zipf cumulative distribution...
+Distribution calculated for 205 items
+Setup complete. Content catalog has 205 URLs
+
+ Starting 5-day simulation...
+=== Day 1/5 ===
+Day 1: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 1 completed: 100 requests generated
+Day 1 completed. Elapsed: 65s, Estimated remaining: 260s
+End of day 1, brief pause...
+=== Day 2/5 ===
+Day 2: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 2 completed: 100 requests generated
+Day 2 completed. Elapsed: 131s, Estimated remaining: 195s
+End of day 2, brief pause...
+=== Day 3/5 ===
+Day 3: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 3 completed: 100 requests generated
+Day 3 completed. Elapsed: 204s, Estimated remaining: 136s
+End of day 3, brief pause...
+=== Day 4/5 ===
+Day 4: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 4 completed: 100 requests generated
+Day 4 completed. Elapsed: 274s, Estimated remaining: 68s
+End of day 4, brief pause...
+=== Day 5/5 ===
+Day 5: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 5 completed: 100 requests generated
+Day 5 completed. Elapsed: 339s, Estimated remaining: 0s
+All 5 days completed in 339 seconds
+
+ Generating analysis...
+Analyzing traffic patterns...
+Analysis complete! Check traffic_analysis.txt for detailed results.
+
+ Quick Summary:
+  Total Requests:      500
+  Success Rate: 27.6%
+  Most Popular: https://web-server-577176926733.us-central1.run.app/images/trending (55 requests)
+
+ Simulation Complete!
+Generated files:
+cdn-simulation/cdn_trend_simulation_zipf.log - Complete request logs (     511 lines)
+traffic_analysis.txt - Traffic pattern analysis
+debug_top_content.log - Top content rankings
+
+ Zipf Distribution Validation:
+  • Total requests generated:      500
+  • Most popular URL: https://web-server-577176926733.us-central1.run.app/images/trending (55 requests)
+  • This demonstrates proper Zipf distribution - few items get most traffic!
+
+--- Simulate traffic (pre-eviction)нка completed successfully ---
+--- Running: Evict using LRB ---
+Starting CDN Cache Eviction with LRB for sea
+Error in main execution: [Errno 2] No such file or directory: '/home/hnfxrt/ml-vm/lrb-new/./pull_index.sh'
+
+--- Evict using LRB completed successfully ---
+--- Running: Simulate traffic (post-eviction) ---
+CDN Traffic Simulation with Zipf Distribution
+All dependencies satisfied
+Configuration validated
+Starting CDN Traffic Simulation
+Parameters:
+  - Total content items: ~205 (7 web categories + 198 CDN files)
+  - Zipf parameter: 1.2
+  - Base requests per day: 100
+  - Categories: images/trending images/popular images/general images/rare videos/tutorials videos/documentaries videos/archived
+Testing network connectivity...
+Setting up content catalog...
+Generating content catalog with Zipf distribution...
+Generated 205 total URLs (7 web categories + 198 CDN files)
+Calculating Zipf cumulative distribution...
+Distribution calculated for 205 items
+Setup complete. Content catalog has 205 URLs
+
+ Starting 5-day simulation...
+=== Day 1/5 ===
+Day 1: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 1 completed: 100 requests generated
+Day 1 completed. Elapsed: 70s, Estimated remaining: 280s
+End of day 1, brief pause...
+=== Day 2/5 ===
+Day 2: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 2 completed: 100 requests generated
+Day 2 completed. Elapsed: 144s, Estimated remaining: 216s
+End of day 2, brief pause...
+=== Day 3/5 ===
+Day 3: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 3 completed: 100 requests generated
+Day 3 completed. Elapsed: 224s, Estimated remaining: 148s
+End of day 3, brief pause...
+=== Day 4/5 ===
+Day 4: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 4 completed: 100 requests generated
+Day 4 completed. Elapsed: 291s, Estimated remaining: 72s
+End of day 4, brief pause...
+=== Day 5/5 ===
+Day 5: Simulating realistic traffic patterns
+Time: 22:00, Multiplier: 1.0x, Requests: 100
+Progress: 25/100 requests completed
+Progress: 50/100 requests completed
+Progress: 75/100 requests completed
+Progress: 100/100 requests completed
+Day 5 completed: 100 requests generated
+Day 5 completed. Elapsed: 358s, Estimated remaining: 0s
+All 5 days completed in 358 seconds
+
+ Generating analysis...
+Analyzing traffic patterns...
+Analysis complete! Check traffic_analysis.txt for detailed results.
+
+ Quick Summary:
+  Total Requests:      500
+  Success Rate: 34.0%
+  Most Popular: https://web-server-577176926733.us-central1.run.app/images/trending (55 requests)
+
+ Simulation Complete!
+Generated files:
+cdn-simulation/cdn_trend_simulation_zipf.log - Complete request logs (     511 lines)
+traffic_analysis.txt - Traffic pattern analysis
+debug_top_content.log - Top content rankings
+
+ Zipf Distribution Validation:
+  • Total requests generated:      500
+  • Most popular URL: https://web-server-577176926733.us-central1.run.app/images/trending (55 requests)
+  • This demonstrates proper Zipf distribution - few items get most traffic!
+
+--- Simulate traffic (post-eviction) completed successfully ---
+--- Test for LRB completed successfully ---
+
+--- A/B Test Execution Summary ---
+{
+  "policy": "lru",
+  "region": "sea",
+  "status": "success"
+}
+{
+  "policy": "lfu",
+  "region": "sea",
+  "status": "success"
+}
+{
+  "policy": "lrb",
+  "region": "sea",
+  "status": "success"
+}
+
+All tests completed.

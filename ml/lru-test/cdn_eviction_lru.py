@@ -15,9 +15,9 @@ if len(sys.argv) < 2:
 REGION = sys.argv[1].lower()
 
 HOSTS = {
-    "sea": "1.1.1.1",
-    "eu": "1.1.1.1",
-    "us": "1.1.1.1"
+    "sea": "34.128.85.243",
+    "eu": "35.197.236.92",
+    "us": "34.23.29.132"
 }
 
 if REGION not in HOSTS:
@@ -26,9 +26,9 @@ if REGION not in HOSTS:
 
 CONFIG = {
     "cdn_host": HOSTS[REGION],
-    "cdn_user": "USER",
-    "private_key_path": "/dir/to/priv/key",
-    "remote_cache_index": "/location/to/cache_index.json",
+    "cdn_user": "hnfxrt",
+    "private_key_path": "/Users/feb/Documents/GitHub/mock-flask-app/id_rsa",
+    "remote_cache_index": "/home/hnfxrt/cache_index.json",
     "remote_cache_dir": "/var/cache/nginx/media/",  # default location
     "local_index_copy": f"cache_index_lru_{REGION}.json",
     "cache_limit_mb": 500,

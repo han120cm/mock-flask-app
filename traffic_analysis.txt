@@ -1,0 +1,43 @@
+=== SIMULATION STATISTICS ===
+Total requests:      500
+Successful requests:      170
+Failed requests:        0
+Success rate: 34.00%
+
+=== TOP 20 MOST REQUESTED URLS ===
+  55 https://web-server-577176926733.us-central1.run.app/images/trending
+  45 https://web-server-577176926733.us-central1.run.app/videos/tutorials
+  24 https://web-server-577176926733.us-central1.run.app/images/popular
+  24 https://web-server-577176926733.us-central1.run.app/images/general
+  13 https://web-server-577176926733.us-central1.run.app/videos/documentaries
+   6 https://web-server-577176926733.us-central1.run.app/images/rare
+   3 https://web-server-577176926733.us-central1.run.app/videos/archived
+
+=== REQUESTS BY CATEGORY ===
+  55 images/trending
+  45 videos/tutorials
+  24 images/popular
+  24 images/general
+  13 videos/documentaries
+   6 images/rare
+   3 videos/archived
+
+=== REQUESTS BY CONTENT TYPE ===
+Images: 0 (0%)
+Videos: 0 (0%)
+Other: 170 (100.0%)
+
+=== RESPONSE TIME ANALYSIS ===
+
+=== ZIPF DISTRIBUTION VALIDATION (Top 50) ===
+Rank,Frequency,URL
+1,55,https://web-server-577176926733.us-central1.run.app/images/trending
+2,45,https://web-server-577176926733.us-central1.run.app/videos/tutorials
+3,24,https://web-server-577176926733.us-central1.run.app/images/popular
+4,24,https://web-server-577176926733.us-central1.run.app/images/general
+5,13,https://web-server-577176926733.us-central1.run.app/videos/documentaries
+6,6,https://web-server-577176926733.us-central1.run.app/images/rare
+7,3,https://web-server-577176926733.us-central1.run.app/videos/archived
+
+=== HOURLY REQUEST DISTRIBUTION ===
+22:00,170

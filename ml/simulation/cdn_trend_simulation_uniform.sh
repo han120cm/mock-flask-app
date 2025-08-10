@@ -1,7 +1,7 @@
 #!/bin/bash
 
-WEB_BASE="origin-server.com"
-CDN_BASE="cdn-server.com"
+WEB_BASE="https://web-server-577176926733.us-central1.run.app"
+CDN_BASE="https://cdn.sohryuu.me"
 LOG_FILE="cdn_trend_simulation.log"
 REPEAT_BASE=3 
 

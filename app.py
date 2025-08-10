@@ -145,7 +145,7 @@ def cdn_healthcheck_loop():
         try:
             resp = requests.head(CDN_HEALTHCHECK_URL, timeout=3)
             CDN_AVAILABLE = resp.status_code == 200
-            logger.info(f"CDN healthcheck: {CDN_AVAILABLE}")
+            # logger.info(f"CDN healthcheck: {CDN_AVAILABLE}")
         except Exception as e:
             CDN_AVAILABLE = False
             logger.warning(f"CDN healthcheck failed: {e}")
@@ -156,7 +156,7 @@ def start_cdn_healthcheck():
     try:
         t = threading.Thread(target=cdn_healthcheck_loop, daemon=True)
         t.start()
-        logger.info("CDN healthcheck thread started")
+        # logger.info("CDN healthcheck thread started")
     except Exception as e:
         logger.error(f"Failed to start CDN healthcheck: {e}")
 
