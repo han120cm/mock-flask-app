@@ -97,11 +97,46 @@ class ABTester:
             return None
             
         try:
+            # Check if private key file exists
+            if not os.path.exists(self.private_key_path):
+                print(f"Private key file not found: {self.private_key_path}")
+                return None
+                
             # Establish SSH connection
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            ssh.connect(self.cdn_host, username=self.cdn_user, 
-                       key_filename=self.private_key_path)
+            
+            # Try different key loading methods
+            try:
+                # Method 1: Direct key file
+                ssh.connect(self.cdn_host, username=self.cdn_user, 
+                           key_filename=self.private_key_path)
+            except paramiko.ssh_exception.PasswordRequiredException:
+                print("Private key requires passphrase. Please ensure key is unlocked.")
+                return None
+            except paramiko.ssh_exception.AuthenticationException as auth_err:
+                print(f"Authentication failed: {auth_err}")
+                # Try loading key manually
+                try:
+                    private_key = paramiko.RSAKey.from_private_key_file(self.private_key_path)
+                    ssh.connect(self.cdn_host, username=self.cdn_user, pkey=private_key)
+                except Exception as rsa_err:
+                    print(f"RSA key authentication failed: {rsa_err}")
+                    try:
+                        private_key = paramiko.Ed25519Key.from_private_key_file(self.private_key_path)
+                        ssh.connect(self.cdn_host, username=self.cdn_user, pkey=private_key)
+                    except Exception as ed25519_err:
+                        print(f"Ed25519 key authentication failed: {ed25519_err}")
+                        try:
+                            private_key = paramiko.ECDSAKey.from_private_key_file(self.private_key_path)
+                            ssh.connect(self.cdn_host, username=self.cdn_user, pkey=private_key)
+                        except Exception as ecdsa_err:
+                            print(f"ECDSA key authentication failed: {ecdsa_err}")
+                            return None
+            except Exception as e:
+                print(f"SSH connection failed: {e}")
+                return None
+            
             sftp = ssh.open_sftp()
             
             # Download cache index

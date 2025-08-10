@@ -104,7 +104,18 @@
                 resultsDiv.innerHTML = html;
             } else {
                 if (data.error && data.error.includes('Cannot connect to CDN')) {
-                    resultsDiv.innerHTML = `<p class="error">Error: Cannot connect to CDN. Please check connection settings or try again later.</p>`;
+                    resultsDiv.innerHTML = `
+                        <p class="error">Error: Cannot connect to CDN.</p>
+                        <p class="error-details">Please check:
+                        <ul>
+                            <li>CDN host IP address is correct</li>
+                            <li>SSH username is correct</li>
+                            <li>Private key file exists and has correct permissions</li>
+                            <li>SSH key is not password-protected (or is unlocked)</li>
+                            <li>Network connectivity to CDN node</li>
+                        </ul>
+                        </p>
+                    `;
                 } else {
                     resultsDiv.innerHTML = `<p class="error">Error: ${data.error}</p>`;
                 }
@@ -149,6 +160,20 @@
 .error {
     color: #e74c3c;
     font-weight: bold;
+}
+
+.error-details {
+    color: #7f8c8d;
+    margin-top: 10px;
+}
+
+.error-details ul {
+    margin: 10px 0 10px 20px;
+    padding: 0;
+}
+
+.error-details li {
+    margin: 5px 0;
 }
 
 .form-group {

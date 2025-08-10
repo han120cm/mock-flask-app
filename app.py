@@ -813,7 +813,7 @@ def run_ab_test_api():
         logger.error(f"Error in run_ab_test_api route: {e}")
         error_message = str(e)
         if "Cannot connect to CDN" in error_message:
-            return jsonify({'error': 'Cannot connect to CDN - Please check connection settings'}), 500
+            return jsonify({'error': 'Cannot connect to CDN - Please check connection settings and SSH key configuration'}), 500
         return jsonify({'error': error_message}), 500
 
 
