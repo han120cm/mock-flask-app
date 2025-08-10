@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Script to run A/B tests comparing cache eviction policies
+Script to run A/B tests comparing cache eviction policies.
+This script requires a live CDN connection and does not use mock data.
 """
 
 import sys
@@ -14,8 +15,8 @@ def run_policy_test(policy: str, region: str) -> dict:
     
     script_path = f"ml/{policy.lower()}-test/cdn_eviction_{policy.lower()}.py"
     if not os.path.exists(script_path):
-        print(f"Script not found: {script_path}")
-        return {"error": "script not found"}
+        print(f"Error: Script not found: {script_path}")
+        sys.exit(1)
 
     try:
         result = subprocess.run(
@@ -25,41 +26,29 @@ def run_policy_test(policy: str, region: str) -> dict:
             check=True
         )
         
-        # Try to parse metrics from the output
         output = result.stdout
-        metrics = {"policy": policy.upper(), "region": region.upper()}
+        metrics = {"policy": policy.upper(), "region": region.upper(), "status": "success"}
+        print(output) # Print the full output of the script
 
-        if "Eviction complete" in output or "Eviction complete" in output:
-            for line in output.split('\n'):
-                if "files evicted" in line or "files removed" in line:
-                    metrics["files_evicted"] = int(line.split()[0])
-                if "MB freed" in line:
-                    metrics["mb_freed"] = float(line.split()[0])
-        
-        # For LFU and LRU, we can read the json log
-        log_file = f"{policy.lower()}_eviction_metrics_{region.lower()}.json"
-        if os.path.exists(log_file):
-            with open(log_file, 'r') as f:
-                log_data = json.load(f)
-                # get the last entry
-                if log_data:
-                    metrics.update(log_data[-1])
+        # You can add more sophisticated parsing here if needed
+        # For now, we just capture the success status.
 
-        print(f"--- Test for {policy.upper()} completed ---")
+        print(f"--- Test for {policy.upper()} completed successfully ---")
         return metrics
 
     except subprocess.CalledProcessError as e:
-        print(f"Error running {policy.upper()} test:")
+        print(f"--- Error running {policy.upper()} test for {region.upper()} ---")
+        print("Error: The script failed to execute. This might be due to a problem with the CDN connection or the script itself.")
+        print("\n--- stderr from script ---")
         print(e.stderr)
-        return {"error": e.stderr}
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return {"error": str(e)}
+        print("--------------------------")
+        sys.exit(1)
 
 
 def main():
     """Main function to run A/B tests"""
     print("CDN Cache Eviction Policy A/B Tester")
+    print("This script runs tests against a live CDN and requires a working connection.")
     print("=" * 50)
 
     if len(sys.argv) < 2:
@@ -79,12 +68,12 @@ def main():
         results = run_policy_test(policy, region)
         all_results.append(results)
 
-    print("\n--- A/B Test Summary ---")
+    print("\n--- A/B Test Execution Summary ---")
     for result in all_results:
         print(json.dumps(result, indent=2))
     
-    # You can add more sophisticated comparison logic here
-    # For now, we just print the results.
+    print("\nAll tests completed.")
+
 
 if __name__ == "__main__":
     main()
