@@ -11,6 +11,7 @@
     </div>
     
     <a href="{{ url_for('home') }}" class="back-button">← Back to Archive</a>
+    <a href="{{ url_for('upload_content') }}" class="action-btn action-btn-upload" style="margin-left: 1em;">⬆️ Upload Image</a>
     
     <div class="media-grid">
         {% for url in urls %}
@@ -23,5 +24,80 @@
         </div>
         {% endfor %}
     </div>
+    <hr>
+    <h3>User Uploaded Images</h3>
+    {% if user_images and user_images|length > 0 %}
+    <div class="media-grid">
+        {% for img in user_images %}
+        <div class="media-item">
+            <img src="{{ img.url }}" alt="User Image {{ loop.index }}" loading="lazy">
+            <div class="media-info">
+                <h4>{{ img.filename }}</h4>
+                <p>Uploaded: {{ img.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                <form method="POST" action="{{ url_for('delete_content', content_id=img.id) }}" style="display:inline;">
+                    <a href="{{ url_for('edit_content', content_id=img.id) }}" class="action-btn action-btn-edit">✏️ Edit</a>
+                    <button type="submit" class="action-btn action-btn-delete" onclick="return confirm('Delete this image?');">🗑️ Delete</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="text-align:center; color:#888;">No user uploaded images yet.</p>
+    {% endif %}
 </div>
+{% endblock %}
+{% block styles %}
+<style>
+.back-button {
+    display: inline-block;
+    background: #4f8cff;
+    color: #fff !important;
+    padding: 0.6em 1.6em;
+    border-radius: 1.2em;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    margin: 0 0.2em 0.2em 0;
+    text-decoration: none;
+    font-size: 1.1em;
+}
+.back-button:hover {
+    background: #2563eb;
+    color: #fff !important;
+    box-shadow: 0 4px 16px rgba(79,140,255,0.15);
+}
+.fancy-btn {
+    display: inline-block;
+    padding: 0.4em 1.2em;
+    border-radius: 2em;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    margin: 0 0.2em 0.2em 0;
+    text-decoration: none;
+}
+.fancy-edit {
+    background: linear-gradient(90deg, #ffb347, #ffcc33);
+    color: #222;
+}
+.fancy-edit:hover {
+    background: linear-gradient(90deg, #ffcc33, #ffb347);
+    color: #111;
+    box-shadow: 0 4px 16px rgba(255,204,51,0.15);
+}
+.fancy-delete {
+    background: linear-gradient(90deg, #ff5858, #ffb347);
+    color: #fff;
+}
+.fancy-delete:hover {
+    background: linear-gradient(90deg, #ffb347, #ff5858);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(255,88,88,0.15);
+}
+</style>
 {% endblock %}
