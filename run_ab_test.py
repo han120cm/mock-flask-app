@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Script to run A/B tests comparing cache eviction policies using a specific testing flow.
+Script to run A/B tests comparing cache eviction policies.
+This script requires a live CDN connection and does not use mock data.
 """
 
 import sys
@@ -12,8 +13,8 @@ def run_command(command: list, description: str) -> bool:
     """Runs a command and handles errors."""
     print(f"--- Running: {description} ---")
     try:
-        # Using shell=True for simplicity with shell scripts, be cautious with untrusted input
-        result = subprocess.run(" ".join(command), check=True, text=True, capture_output=True, shell=True)
+        # Explicitly use bash to execute the command
+        result = subprocess.run(["bash", "-c", " ".join(command)], check=True, text=True, capture_output=True)
         print(result.stdout)
         print(f"--- {description} completed successfully ---")
         return True
