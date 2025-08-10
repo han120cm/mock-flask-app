@@ -757,24 +757,31 @@ def generate_test_data():
 
 @app.route("/api/run-ab-test", methods=['POST'])
 def run_ab_test_api():
-    """API endpoint to run cache eviction policy A/B test"""
+    """API endpoint to run cache eviction policy A/B test with real CDN data"""
     try:
         from cache_policies.ab_tester import ABTester
         import json
+        import os
         
         # Get parameters from request
         data = request.get_json()
         cache_size_mb = data.get('cache_size_mb', 50)
         num_iterations = data.get('num_iterations', 3)
         
-        # Initialize tester
-        tester = ABTester(cache_size_mb=cache_size_mb)
+        # Initialize tester with CDN connection settings from environment variables
+        cdn_host = os.getenv('CDN_HOST')
+        cdn_user = os.getenv('CDN_USER')
+        private_key_path = os.getenv('PRIVATE_KEY_PATH')
         
-        # Generate mock cache index
-        cache_index = tester.generate_mock_cache_index(100)
+        tester = ABTester(
+            cache_size_mb=cache_size_mb,
+            cdn_host=cdn_host,
+            cdn_user=cdn_user,
+            private_key_path=private_key_path
+        )
         
-        # Run A/B test
-        results = tester.run_ab_test(cache_index, num_iterations)
+        # Run A/B test with real data requirement
+        results = tester.run_ab_test(num_iterations=num_iterations, require_real_data=True)
         
         # Get summary statistics
         summary = tester.get_summary_statistics()
@@ -800,11 +807,14 @@ def run_ab_test_api():
             'status': 'success',
             'results': results,
             'summary': summary_dict,
-            'message': f'Completed A/B test with {num_iterations} iterations'
+            'message': f'Completed A/B test with {num_iterations} iterations using real CDN data'
         })
     except Exception as e:
         logger.error(f"Error in run_ab_test_api route: {e}")
-        return jsonify({'error': str(e)}), 500
+        error_message = str(e)
+        if "Cannot connect to CDN" in error_message:
+            return jsonify({'error': 'Cannot connect to CDN - Please check connection settings'}), 500
+        return jsonify({'error': error_message}), 500
 
 
 if __name__ == "__main__":

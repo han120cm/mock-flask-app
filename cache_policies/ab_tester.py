@@ -221,16 +221,21 @@ class ABTester:
         return result
     
     def run_ab_test(self, cache_index: Dict[str, Any] = None, 
-                   num_iterations: int = 10) -> List[Dict[str, Any]]:
+                   num_iterations: int = 10, 
+                   require_real_data: bool = False) -> List[Dict[str, Any]]:
         """
         Run A/B test comparing all policies
         
         Args:
             cache_index: Cache index to test (fetches real data if None and CDN configured)
             num_iterations: Number of test iterations
+            require_real_data: If True, raise error if can't connect to CDN
             
         Returns:
             List of test results
+            
+        Raises:
+            Exception: If require_real_data is True and CDN connection fails
         """
         # Fetch real data if available and no cache_index provided
         if cache_index is None:
@@ -238,7 +243,11 @@ class ABTester:
                 print("Attempting to fetch real cache index from CDN...")
                 cache_index = self.fetch_real_cache_index()
             
-            # If still None, generate mock data
+            # If still None and real data is required, raise error
+            if cache_index is None and require_real_data:
+                raise Exception("Cannot connect to CDN - No real cache data available")
+            
+            # If still None but not required, generate mock data
             if cache_index is None:
                 print("Using mock cache index for testing...")
                 cache_index = self.generate_mock_cache_index(100)
