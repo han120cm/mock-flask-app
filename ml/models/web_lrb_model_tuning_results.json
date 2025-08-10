@@ -1,0 +1,155 @@
+{
+  "feature_columns": [
+    "size",
+    "type_encoded",
+    "access_count",
+    "age_since_last_access",
+    "age_hours",
+    "log_file_size",
+    "access_rate",
+    "recency_score",
+    "stack_distance_approx"
+  ],
+  "type_mapping": {
+    "video": 0,
+    "audio": 1,
+    "image": 2,
+    "html": 3,
+    "css": 4,
+    "javascript": 5,
+    "pdf": 6,
+    "text": 7,
+    "data": 8,
+    "archive": 9,
+    "other": 10,
+    "unknown": 11
+  },
+  "tuning_config": {
+    "method": "random",
+    "cv_folds": 3,
+    "n_iter": 50,
+    "scoring": {
+      "binary": "f1",
+      "regression": "neg_mean_absolute_error"
+    },
+    "test_size": 0.2,
+    "validation_size": 0.2,
+    "random_state": 42
+  },
+  "tuning_results": {
+    "binary": {
+      "best_params": {
+        "subsample": 1.0,
+        "num_leaves": 63,
+        "n_estimators": 50,
+        "min_child_samples": 50,
+        "max_depth": 9,
+        "learning_rate": 0.05,
+        "colsample_bytree": 0.8
+      },
+      "best_cv_score": 0.9055406471131917,
+      "test_metrics": {
+        "accuracy": 0.8390459363957598,
+        "precision": 0.8412881703874775,
+        "recall": 0.9806326179615643,
+        "f1": 0.905631711612168,
+        "auc": 0.7232434747270065
+      },
+      "feature_importance": [
+        {
+          "feature": "access_count",
+          "importance": 674
+        },
+        {
+          "feature": "size",
+          "importance": 544
+        },
+        {
+          "feature": "access_rate",
+          "importance": 514
+        },
+        {
+          "feature": "stack_distance_approx",
+          "importance": 488
+        },
+        {
+          "feature": "age_since_last_access",
+          "importance": 350
+        },
+        {
+          "feature": "recency_score",
+          "importance": 278
+        },
+        {
+          "feature": "log_file_size",
+          "importance": 187
+        },
+        {
+          "feature": "age_hours",
+          "importance": 65
+        },
+        {
+          "feature": "type_encoded",
+          "importance": 0
+        }
+      ]
+    },
+    "distance": {
+      "best_params": {
+        "subsample": 0.8,
+        "num_leaves": 31,
+        "n_estimators": 50,
+        "min_child_samples": 20,
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.8
+      },
+      "best_cv_score": -79.02605554422946,
+      "test_metrics": {
+        "mse": 46076.42916748706,
+        "mae": 79.0082888098158,
+        "rmse": 214.65420836193047,
+        "r2": 0.3369908749203949
+      }
+    },
+    "reuse": {
+      "best_params": {
+        "subsample": 0.8,
+        "num_leaves": 31,
+        "n_estimators": 50,
+        "min_child_samples": 20,
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "colsample_bytree": 0.8
+      },
+      "best_cv_score": -0.09804694780903124,
+      "test_metrics": {
+        "mse": 0.027895309808915456,
+        "mae": 0.09661529263278716,
+        "rmse": 0.16701889057503483,
+        "r2": 0.03163657717871948
+      }
+    }
+  },
+  "data_splits": {
+    "train_size": 108668,
+    "val_size": 27168,
+    "test_size": 33960,
+    "total_size": 169796
+  },
+  "training_stats": {
+    "total_records": 169796,
+    "unique_files": 101,
+    "hit_rate": 0.9987985582699239,
+    "avg_access_distance": 100.62954368771938,
+    "avg_reuse_prob": 0.09937468814177408
+  },
+  "model_performance_summary": {
+    "binary_f1": 0.905631711612168,
+    "binary_auc": 0.7232434747270065,
+    "distance_mae": 79.0082888098158,
+    "distance_r2": 0.3369908749203949,
+    "reuse_mae": 0.09661529263278716,
+    "reuse_r2": 0.03163657717871948
+  }
+}
