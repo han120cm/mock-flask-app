@@ -17,7 +17,6 @@ else
   exit 1
 fi
 
-echo "Deleting cache at /var/cache/nginx/media/ on $TARGET ($HOST)..."
+echo "Deleting cache at /var/cache/nginx/media/ on $TARGET ($HOST) using Python script..."
 
-ssh -o IdentitiesOnly=yes -i "$KEY" "$USER@$HOST" "sudo rm -rf /var/cache/nginx/media/*" && \
-echo "Cache cleared on $TARGET ($HOST)"
+python3 ml/delete_cache.py "$HOST" "$USER" "$KEY"
