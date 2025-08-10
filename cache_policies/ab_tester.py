@@ -5,6 +5,8 @@ import random
 import pandas as pd
 from datetime import datetime, timedelta
 from typing import Dict, Any, List, Tuple
+import paramiko
+import os
 from .lru import LRUPolicy
 from .lfu import LFUPolicy
 from .lrb import LRBPolicy
@@ -13,12 +15,18 @@ from .lrb import LRBPolicy
 class ABTester:
     """A/B Testing framework for comparing cache eviction policies"""
     
-    def __init__(self, cache_size_mb: float = 100):
+    def __init__(self, cache_size_mb: float = 100, 
+                 cdn_host: str = None, 
+                 cdn_user: str = None, 
+                 private_key_path: str = None):
         """
         Initialize A/B tester
         
         Args:
             cache_size_mb: Cache size limit in MB
+            cdn_host: CDN node hostname/IP (optional)
+            cdn_user: CDN node username (optional)
+            private_key_path: SSH private key path (optional)
         """
         self.cache_size_mb = cache_size_mb
         self.cache_size_bytes = cache_size_mb * 1024 * 1024
@@ -28,6 +36,13 @@ class ABTester:
             'LRB': LRBPolicy(cache_size_mb)
         }
         self.test_results = []
+        
+        # CDN connection settings (optional)
+        self.cdn_host = cdn_host or os.getenv('CDN_HOST')
+        self.cdn_user = cdn_user or os.getenv('CDN_USER')
+        self.private_key_path = private_key_path or os.getenv('PRIVATE_KEY_PATH')
+        self.remote_cache_index = '/home/hnfxrt/cache_index.json'
+        self.local_cache_copy = 'temp_cache_index.json'
     
     def generate_mock_cache_index(self, num_items: int = 100) -> Dict[str, Any]:
         """
@@ -69,6 +84,47 @@ class ABTester:
             }
         
         return cache_index
+    
+    def fetch_real_cache_index(self) -> Dict[str, Any]:
+        """
+        Fetch real cache index from CDN node via SSH
+        
+        Returns:
+            Dictionary representing cache index, or None if failed
+        """
+        if not all([self.cdn_host, self.cdn_user, self.private_key_path]):
+            print("CDN connection settings not configured. Using mock data.")
+            return None
+            
+        try:
+            # Establish SSH connection
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(self.cdn_host, username=self.cdn_user, 
+                       key_filename=self.private_key_path)
+            sftp = ssh.open_sftp()
+            
+            # Download cache index
+            sftp.get(self.remote_cache_index, self.local_cache_copy)
+            sftp.close()
+            ssh.close()
+            
+            # Load cache index
+            with open(self.local_cache_copy, 'r') as f:
+                cache_index = json.load(f)
+            
+            # Clean up local copy
+            os.remove(self.local_cache_copy)
+            
+            print(f"Successfully fetched cache index with {len(cache_index)} items")
+            return cache_index
+            
+        except Exception as e:
+            print(f"Failed to fetch real cache index: {e}")
+            # Clean up local copy if it exists
+            if os.path.exists(self.local_cache_copy):
+                os.remove(self.local_cache_copy)
+            return None
     
     def calculate_hit_ratio(self, cache_index: Dict[str, Any], 
                           evicted_files: List[str]) -> float:
@@ -170,18 +226,27 @@ class ABTester:
         Run A/B test comparing all policies
         
         Args:
-            cache_index: Cache index to test (generates mock if None)
+            cache_index: Cache index to test (fetches real data if None and CDN configured)
             num_iterations: Number of test iterations
             
         Returns:
             List of test results
         """
+        # Fetch real data if available and no cache_index provided
         if cache_index is None:
-            cache_index = self.generate_mock_cache_index(100)
+            if self.cdn_host and self.cdn_user and self.private_key_path:
+                print("Attempting to fetch real cache index from CDN...")
+                cache_index = self.fetch_real_cache_index()
+            
+            # If still None, generate mock data
+            if cache_index is None:
+                print("Using mock cache index for testing...")
+                cache_index = self.generate_mock_cache_index(100)
         
         all_results = []
         
         print(f"Running A/B test with {num_iterations} iterations...")
+        print(f"Cache items: {len(cache_index)}")
         print(f"Cache size: {self.cache_size_mb} MB")
         print(f"Policies: {', '.join(self.policies.keys())}")
         print("-" * 60)
