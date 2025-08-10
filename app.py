@@ -9,6 +9,7 @@ import os
 import logging
 from dotenv import load_dotenv
 from sqlalchemy import case
+import pandas as pd
 
 # Load environment variables from .env file
 load_dotenv()
@@ -779,12 +780,21 @@ def run_ab_test_api():
         summary = tester.get_summary_statistics()
         
         # Convert summary to dict for JSON serialization
-        summary_dict = {}
-        if not summary.empty:
-            for policy in summary.index:
-                summary_dict[policy] = {}
-                for col in summary.columns:
-                    summary_dict[policy][col] = summary.loc[policy, col]
+                summary_dict = {}
+                if not summary.empty:
+                    for policy in summary.index:
+                        summary_dict[policy] = {}
+                        for col in summary.columns:
+                            value = summary.loc[policy, col]
+                            # Handle NaN values for JSON serialization
+                            if pd.isna(value):
+                                summary_dict[policy][col] = None
+                            else:
+                                # Convert numpy types to Python native types
+                                if hasattr(value, 'item'):
+                                    summary_dict[policy][col] = value.item()
+                                else:
+                                    summary_dict[policy][col] = value
         
         return jsonify({
             'status': 'success',
