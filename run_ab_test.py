@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Script to run A/B tests comparing cache eviction policies.
-This script requires a live CDN connection and does not use mock data.
+Script to run A/B tests comparing cache eviction policies using a specific testing flow.
 """
 
 import sys
@@ -9,46 +8,60 @@ import os
 import subprocess
 import json
 
+def run_command(command: list, description: str) -> bool:
+    """Runs a command and handles errors."""
+    print(f"--- Running: {description} ---")
+    try:
+        # Using shell=True for simplicity with shell scripts, be cautious with untrusted input
+        result = subprocess.run(" ".join(command), check=True, text=True, capture_output=True, shell=True)
+        print(result.stdout)
+        print(f"--- {description} completed successfully ---")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"--- Error running {description} ---")
+        print(e.stderr)
+        return False
+
 def run_policy_test(policy: str, region: str) -> dict:
     """Runs a single policy test and returns the metrics."""
-    print(f"--- Running {policy.upper()} test for {region.upper()} ---")
+    print(f"\n{'='*20} Starting test for {policy.upper()} policy in {region.upper()} region {'='*20}")
+
+    # 1. Delete cache
+    if not run_command(["bash", "ml/simulation/cdn-delete.sh", region], "Delete cache"):
+        return {"policy": policy, "region": region, "status": "failed", "step": "delete"}
+
+    # 2. Simulate traffic
+    if not run_command(["bash", "ml/simulation/cdn_trend_simulation_zipf.sh"], "Simulate traffic (pre-eviction)нка"):
+        return {"policy": policy, "region": region, "status": "failed", "step": "pre-eviction simulation"}
+
+    # 3. Evict
+    eviction_script = f"ml/{policy}-test/cdn_eviction_{policy}.py"
+    if not run_command(["python3", eviction_script, region], f"Evict using {policy.upper()}"):
+        return {"policy": policy, "region": region, "status": "failed", "step": "eviction"}
+
+    # 4. Simulate traffic again
+    if not run_command(["bash", "ml/simulation/cdn_trend_simulation_zipf.sh"], "Simulate traffic (post-eviction)"):
+        return {"policy": policy, "region": region, "status": "failed", "step": "post-eviction simulation"}
+
+    # 5. Collect metrics
+    # As the scripts are not designed to return structured metrics, we will check for the log files
+    log_file = f"{policy.lower()}_eviction_metrics_{region.lower()}.json"
+    metrics = {"policy": policy, "region": region, "status": "success"}
+    if os.path.exists(log_file):
+        with open(log_file, 'r') as f:
+            log_data = json.load(f)
+            if log_data:
+                metrics.update(log_data[-1])
     
-    script_path = f"ml/{policy.lower()}-test/cdn_eviction_{policy.lower()}.py"
-    if not os.path.exists(script_path):
-        print(f"Error: Script not found: {script_path}")
-        sys.exit(1)
-
-    try:
-        result = subprocess.run(
-            ["python3", script_path, region],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        
-        output = result.stdout
-        metrics = {"policy": policy.upper(), "region": region.upper(), "status": "success"}
-        print(output) # Print the full output of the script
-
-        # You can add more sophisticated parsing here if needed
-        # For now, we just capture the success status.
-
-        print(f"--- Test for {policy.upper()} completed successfully ---")
-        return metrics
-
-    except subprocess.CalledProcessError as e:
-        print(f"--- Error running {policy.upper()} test for {region.upper()} ---")
-        print("Error: The script failed to execute. This might be due to a problem with the CDN connection or the script itself.")
-        print("\n--- stderr from script ---")
-        print(e.stderr)
-        print("--------------------------")
-        sys.exit(1)
+    print(f"--- Test for {policy.upper()} completed successfully ---")
+    return metrics
 
 
 def main():
     """Main function to run A/B tests"""
     print("CDN Cache Eviction Policy A/B Tester")
-    print("This script runs tests against a live CDN and requires a working connection.")
+    print("This script runs tests against a live CDN following a specific flow:")
+    print("1. Delete cache -> 2. Simulate traffic -> 3. Evict -> 4. Simulate traffic")
     print("=" * 50)
 
     if len(sys.argv) < 2:
@@ -67,6 +80,9 @@ def main():
     for policy in policies:
         results = run_policy_test(policy, region)
         all_results.append(results)
+        if results["status"] == "failed":
+            print(f"--- Test for {policy.upper()} failed at step: {results['step']}. Halting tests. ---")
+            break
 
     print("\n--- A/B Test Execution Summary ---")
     for result in all_results:
