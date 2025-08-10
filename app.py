@@ -490,6 +490,16 @@ def dashboard_page():
         logger.error(f"Error in dashboard_page route: {e}")
         return "Internal server error", 500
 
+@app.route("/ab-test")
+def ab_test_page():
+    """Render the A/B test page"""
+    try:
+        response = make_response(render_template('ab_test.html'))
+        return add_cache_headers(response, 'page')
+    except Exception as e:
+        logger.error(f"Error in ab_test_page route: {e}")
+        return "Internal server error", 500
+
 # In-memory storage for performance metrics (in production, use a database)
 cdn_metrics = {
     'latency_history': [],
@@ -742,6 +752,48 @@ def generate_test_data():
     except Exception as e:
         logger.error(f"Error in generate_test_data route: {e}")
         db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@app.route("/api/run-ab-test", methods=['POST'])
+def run_ab_test_api():
+    """API endpoint to run cache eviction policy A/B test"""
+    try:
+        from cache_policies.ab_tester import ABTester
+        import json
+        
+        # Get parameters from request
+        data = request.get_json()
+        cache_size_mb = data.get('cache_size_mb', 50)
+        num_iterations = data.get('num_iterations', 3)
+        
+        # Initialize tester
+        tester = ABTester(cache_size_mb=cache_size_mb)
+        
+        # Generate mock cache index
+        cache_index = tester.generate_mock_cache_index(100)
+        
+        # Run A/B test
+        results = tester.run_ab_test(cache_index, num_iterations)
+        
+        # Get summary statistics
+        summary = tester.get_summary_statistics()
+        
+        # Convert summary to dict for JSON serialization
+        summary_dict = {}
+        if not summary.empty:
+            for policy in summary.index:
+                summary_dict[policy] = {}
+                for col in summary.columns:
+                    summary_dict[policy][col] = summary.loc[policy, col]
+        
+        return jsonify({
+            'status': 'success',
+            'results': results,
+            'summary': summary_dict,
+            'message': f'Completed A/B test with {num_iterations} iterations'
+        })
+    except Exception as e:
+        logger.error(f"Error in run_ab_test_api route: {e}")
         return jsonify({'error': str(e)}), 500
 
 
