@@ -139,8 +139,40 @@ class ABTester:
             
             sftp = ssh.open_sftp()
             
+            # Check if remote file exists and is readable
+            try:
+                sftp.stat(self.remote_cache_index)
+            except FileNotFoundError:
+                print(f"Remote cache index file not found: {self.remote_cache_index}")
+                sftp.close()
+                ssh.close()
+                return None
+            except PermissionError:
+                print(f"Permission denied accessing remote cache index: {self.remote_cache_index}")
+                print("Please ensure the CDN user has read permissions for this file.")
+                sftp.close()
+                ssh.close()
+                return None
+            except Exception as stat_err:
+                print(f"Error checking remote file: {stat_err}")
+                sftp.close()
+                ssh.close()
+                return None
+            
             # Download cache index
-            sftp.get(self.remote_cache_index, self.local_cache_copy)
+            try:
+                sftp.get(self.remote_cache_index, self.local_cache_copy)
+            except PermissionError:
+                print(f"Permission denied downloading cache index: {self.remote_cache_index}")
+                print("Please ensure the CDN user has read permissions for this file.")
+                sftp.close()
+                ssh.close()
+                return None
+            except Exception as download_err:
+                print(f"Error downloading cache index: {download_err}")
+                sftp.close()
+                ssh.close()
+                return None
             sftp.close()
             ssh.close()
             
